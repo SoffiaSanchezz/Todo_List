@@ -1,22 +1,68 @@
 rules_version = '2';
-    service cloud.firestore {
-      match /databases/{database}/documents {
-        match /tasks/{taskId} {
-          // Permite crear una tarea si el usuario está autenticado
-          allow create: if request.auth != null;
+service cloud.firestore {
+  match /databases/{database}/documents {
 
-          // Permite leer, actualizar o eliminar una tarea
-          // SOLO si el usuario autenticado es el propietario de esa tarea.
-          // Asume que cada documento de tarea tiene un campo 'userId'
-          // que almacena el UID del usuario que creó la tarea.
-          allow read, update, delete: if request.auth != null && request.auth.uid == resource.data.userId;
-        }
-
-        // Si tienes otros datos en el futuro, por ejemplo, perfiles de usuario,
-        // necesitarías añadir más reglas aquí:
-        // match /users/{userId} {
-        //   allow read: if request.auth != null && request.auth.uid == userId;
-        //   allow write: if false; // Solo el sistema puede actualizar perfiles o no se permite
-        // }
-      }
+    // Función auxiliar para verificar si el usuario está autenticado
+    function isAuthenticated() {
+      return request.auth != null;
     }
+
+    // Función auxiliar para verificar si el usuario es el propietario de un documento
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Función auxiliar para verificar si un categoryId se refiere a una categoría
+    // que existe y es propiedad del usuario autenticado.
+    function categoryExistsAndIsOwned(categoryId) {
+      // Si categoryId es nulo/indefinido, no hay categoría que validar.
+      // Si existe, busca el documento de categoría y verifica el userId.
+      return (categoryId == null  categoryId == '') 
+
+             (get(/databases/$(database)/documents/categories/$(categoryId)).data.userId == request.auth.uid);
+    }
+
+    // -------------------------------------------------------------------
+    // Reglas para la colección 'categories'
+    // -------------------------------------------------------------------
+    match /categories/{categoryId} {
+      // Permitir lectura si el usuario es el propietario
+      allow read: if isOwner(resource.data.userId);
+
+      // Permitir creación si el usuario está autenticado y asigna su propio UID
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+
+      // Permitir actualización y eliminación si el usuario es el propietario
+      allow update, delete: if isOwner(resource.data.userId);
+    }
+
+    // -------------------------------------------------------------------
+    // Reglas para la colección 'tasks'
+    // -------------------------------------------------------------------
+    match /tasks/{taskId} {
+      // Permitir lectura si el usuario es el propietario
+      allow read: if isOwner(resource.data.userId);
+
+      // Permitir creación si:
+      // 1. El usuario está autenticado.
+      // 2. El userId de la tarea es el del usuario autenticado.
+      // 3. Si categoryId está presente, se refiere a una categoría existente y propiedad del usuario.
+      allow create: if
+        isAuthenticated() &&
+        request.resource.data.userId == request.auth.uid &&
+        categoryExistsAndIsOwned(request.resource.data.categoryId);
+
+      // Permitir actualización si:
+      // 1. El usuario es el propietario de la tarea actual.
+      // 2. El userId de la tarea NO PUEDE cambiar.
+      // 3. Si categoryId es actualizada, se refiere a una categoría existente y propiedad del usuario.
+      allow update: if
+        isOwner(resource.data.userId) &&
+        request.resource.data.userId == resource.data.userId && // Asegura que el userId no se modifique
+        categoryExistsAndIsOwned(request.resource.data.categoryId);
+
+      // Permitir eliminación si el usuario es el propietario
+      allow delete: if isOwner(resource.data.userId);
+    }
+  }
+}
