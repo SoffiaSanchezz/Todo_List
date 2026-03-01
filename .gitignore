@@ -70,3 +70,6 @@ Thumbs.db
 
 Firebase Data Connect generated files
 dataconnect-generated/
+
+enviroment
+src/environments/

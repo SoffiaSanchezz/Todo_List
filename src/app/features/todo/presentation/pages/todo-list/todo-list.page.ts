@@ -1,14 +1,14 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonicModule, ModalController, PopoverController } from '@ionic/angular';
+import { IonicModule, ModalController, PopoverController, AlertController, ToastController, MenuController } from '@ionic/angular';
 import { TodoInteractor } from '../../../application/todo.interactor';
 import { Category } from '../../../domain/entities/category.entity';
 import { Task, TaskStatus } from '../../../domain/entities/task.entity';
 import { TaskCardComponent } from '../../components/task-card/task-card.component';
 import { TaskModalComponent } from '../../components/task-modal/task-modal.component';
 import { CategoryModalComponent } from '../../components/category-modal/category-modal.component';
-import { map, Observable, Subject, takeUntil } from 'rxjs';
+import { map, Observable, Subject, take, takeUntil } from 'rxjs';
 
 interface KanbanColumn {
   status: TaskStatus;
@@ -43,14 +43,21 @@ export class TodoListPage implements OnInit, OnDestroy {
     private todoInteractor: TodoInteractor,
     private modalController: ModalController,
     private popoverController: PopoverController,
+    private alertController: AlertController,
+    private toastController: ToastController,
+    private menuController: MenuController, // Inject MenuController
     private cdr: ChangeDetectorRef // For ChangeDetectionStrategy.OnPush
   ) {}
 
   ngOnInit() {
+    // ionViewWillEnter is generally better for loading data in Ionic pages
+  }
+
+  ionViewWillEnter() {
     this.loadCategories();
     this.loadTasks();
   }
-
+  
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
@@ -165,6 +172,60 @@ export class TodoListPage implements OnInit, OnDestroy {
     });
     await modal.present();
   }
+
+  // --- Category Deletion ---
+  async presentDeleteConfirm(categoryId: string) {
+    const alert = await this.alertController.create({
+      header: 'Confirmar Eliminación',
+      message: '¿Estás seguro de que quieres eliminar esta categoría? Las tareas asociadas no se eliminarán, pero quedarán sin categoría.',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'secondary',
+        },
+        {
+          text: 'Eliminar',
+          handler: () => {
+            this.deleteCategory(categoryId);
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+  }
+
+  private deleteCategory(categoryId: string) {
+    this.todoInteractor.deleteCategory(categoryId).pipe(take(1)).subscribe({
+      next: () => {
+        // Update the local array to reflect the change immediately
+        this.categories = this.categories.filter(cat => cat.id !== categoryId);
+        this.presentToast('Categoría eliminada con éxito');
+        this.loadTasks(); // Refresh tasks as some may have lost their category
+        this.cdr.detectChanges(); // Manually trigger change detection
+      },
+      error: (err) => {
+        console.error('Error deleting category', err);
+        this.presentToast('Error al eliminar la categoría', 'danger');
+      }
+    });
+  }
+
+  private async presentToast(message: string, color: string = 'success') {
+    const toast = await this.toastController.create({
+      message,
+      duration: 2000,
+      color: color,
+    });
+    toast.present();
+  }
+
+  // --- Menu control ---
+  openCategoryMenu() {
+    this.menuController.open('categoryMenu');
+  }
+
 
   // --- Task actions ---
   onTaskDeleted(taskId: string) {

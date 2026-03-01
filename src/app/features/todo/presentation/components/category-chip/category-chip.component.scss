@@ -1,22 +1,31 @@
 ion-chip {
-  height: 24px;
-  font-size: 0.8em;
-  font-weight: 600;
-  padding: 0 8px;
-  border-radius: 12px;
+  height: 28px;
+  font-size: 0.85em;
+  font-weight: 700;
+  padding: 0 12px;
+  border-radius: 14px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: var(--ion-color-dark); // Default text color, will be overridden by --ion-color if set
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
 
   ion-label {
-    margin-inline-end: 4px;
+    margin-inline-end: 6px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    // El color se establecerá dinámicamente desde el componente
   }
 
   ion-icon {
-    font-size: 0.9em;
+    font-size: 1em;
     cursor: pointer;
-    margin-inline-start: 4px;
-    color: var(--ion-color-dark); // Default icon color
+    margin-inline-start: 6px;
+    opacity: 0.9;
+    transition: opacity 0.2s ease;
+    // El color se establecerá dinámicamente desde el componente
+
+    &:hover {
+      opacity: 1;
+    }
   }
 }

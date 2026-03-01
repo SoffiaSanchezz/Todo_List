@@ -33,17 +33,35 @@ ion-item {
   ion-input,
   ion-textarea,
   ion-select,
-  ion-toggle {
+  ion-toggle,
+  ion-datetime {
     --padding-start: 0;
     --padding-end: 0;
     font-size: 0.95rem;
+    --color: #000000;
+    color: #000000;
+    --placeholder-color: #666666;
   }
 
   ion-label {
     font-weight: 600;
-    color: var(--ion-color-medium);
+    color: #333333;
     font-size: 0.85rem;
     letter-spacing: 0.3px;
+    transition: all 0.2s ease-in-out;
+  }
+
+  &.item-has-focus ion-label,
+  &.item-has-value ion-label {
+    color: var(--ion-color-primary);
+  }
+}
+
+ion-select {
+  --placeholder-color: #666666;
+
+  &::part(text) {
+    color: #000000;
   }
 }
 
@@ -74,14 +92,17 @@ ion-select.ng-invalid.ng-touched {
   &::-webkit-color-swatch-wrapper {
     padding: 0;
   }
+
   &::-webkit-color-swatch {
     border: 3px solid #ffffff;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   }
+
   &::-moz-color-swatch-wrapper {
     padding: 0;
   }
+
   &::-moz-color-swatch {
     border: 3px solid #ffffff;
     border-radius: 8px;
@@ -109,7 +130,7 @@ ion-button[color="danger"] {
 // Header improvements
 ion-header {
   ion-toolbar {
-    --background: #ffffff;
+    --background: #000;
     --border-width: 0;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 
