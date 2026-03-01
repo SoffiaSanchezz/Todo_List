@@ -1,0 +1,31 @@
+ion-chip {
+  height: 28px;
+  font-size: 0.85em;
+  font-weight: 700;
+  padding: 0 12px;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+
+  ion-label {
+    margin-inline-end: 6px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    // El color se establecerá dinámicamente desde el componente
+  }
+
+  ion-icon {
+    font-size: 1em;
+    cursor: pointer;
+    margin-inline-start: 6px;
+    opacity: 0.9;
+    transition: opacity 0.2s ease;
+    // El color se establecerá dinámicamente desde el componente
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}

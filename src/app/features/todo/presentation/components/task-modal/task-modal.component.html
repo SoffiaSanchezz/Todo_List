@@ -1,0 +1,56 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="onCancel()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{ isEditMode ? 'Editar Tarea' : 'Crear Tarea' }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="onSave()" [disabled]="!taskForm.valid">
+        <ion-icon name="checkmark"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- Wrapped form in a card for better visual hierarchy -->
+  <ion-card class="form-card">
+    <ion-card-content>  
+      <form [formGroup]="taskForm">
+        <ion-item>
+          <ion-input label="Título" labelPlacement="floating" formControlName="title"
+            placeholder="Título de la tarea"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-textarea label="Descripción" labelPlacement="floating" formControlName="description" rows="3"
+            placeholder="Descripción de la tarea"></ion-textarea>
+        </ion-item>
+
+        <ion-item>
+          <ion-select label="Estado" labelPlacement="floating" formControlName="status">
+            <ion-select-option *ngFor="let status of taskStatuses" [value]="status">
+              {{ status | titlecase }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-select label="Categoría" labelPlacement="floating" formControlName="categoryId"
+            placeholder="Seleccionar Categoría">
+            <ion-select-option [value]="null">Sin Categoría</ion-select-option>
+            <ion-select-option *ngFor="let category of categories" [value]="category.id">
+              {{ category.name }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item *ngIf="isEditMode">
+          <ion-toggle formControlName="completed">Completada</ion-toggle>
+        </ion-item>
+      </form>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

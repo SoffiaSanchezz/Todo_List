@@ -1,0 +1,368 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+
+// ====================================
+// Variables de Color - Dark Theme
+// ====================================
+$dark-bg: #111827; // Fondo principal oscuro
+$dark-surface: rgba(17, 24, 39, 1); // Superficie oscura (EXACTO del ejemplo)
+$dark-border: rgba(55, 65, 81, 1); // Bordes (EXACTO del ejemplo)
+$text-light: rgba(243, 244, 246, 1); // Texto principal claro (EXACTO)
+$text-muted: rgba(156, 163, 175, 1); // Texto secundario (EXACTO)
+$accent-purple: rgba(167, 139, 250, 1); // Acento púrpura (EXACTO)
+$accent-purple-hover: #8b5cf6; // Púrpura hover
+$error-color: #ef4444; // Rojo para errores
+
+// ====================================
+// Global Styles
+// ====================================
+* {
+  font-family: 'Quicksand', sans-serif;
+  box-sizing: border-box;
+}
+
+// ====================================
+// Header Styles
+// ====================================
+ion-header {
+  ion-toolbar {
+    --background: #{$dark-bg};
+    --border-width: 0 0 1px 0;
+    --border-color: #{$dark-border};
+
+    ion-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: $text-light;
+      letter-spacing: -0.02em;
+    }
+  }
+}
+
+// ====================================
+// Content Styles - Centrado exacto
+// ====================================
+ion-content {
+  --background: #{$dark-bg};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 16px;
+
+  &::part(scroll) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+// ====================================
+// Form Container (Diseño EXACTO del ejemplo)
+// ====================================
+.form-container {
+  width: 320px; // Ancho EXACTO del ejemplo
+  border-radius: 0.75rem;
+  background-color: $dark-surface;
+  padding: 2rem;
+  color: $text-light;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+
+  .title {
+    text-align: center;
+    font-size: 1.5rem;
+    line-height: 2rem;
+    font-weight: 700;
+    color: $text-light;
+    margin: 0 0 1.5rem 0;
+  }
+}
+
+// ====================================
+// Form Styles
+// ====================================
+.form {
+  margin-top: 1.5rem;
+  width: 100%;
+}
+
+// ====================================
+// Input Group Styles (EXACTO del ejemplo)
+// ====================================
+.input-group {
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  width: 100%;
+
+  &:first-of-type {
+    margin-top: 0;
+  }
+
+  label {
+    display: block;
+    color: $text-muted;
+    margin-bottom: 4px;
+    font-weight: 500;
+  }
+
+  input {
+    width: 100%;
+    border-radius: 0.375rem;
+    border: 1px solid $dark-border;
+    outline: 0;
+    background-color: $dark-surface;
+    padding: 0.75rem 1rem;
+    color: $text-light;
+    font-size: 0.875rem;
+    font-family: 'Quicksand', sans-serif;
+    height: 44px; // Altura consistente
+    transition: all 0.2s ease;
+
+    &:focus {
+      border-color: $accent-purple;
+    }
+
+    &::placeholder {
+      color: rgba(156, 163, 175, 0.6);
+    }
+
+    &.error {
+      border-color: $error-color;
+      animation: shake 0.3s ease;
+
+      &:focus {
+        border-color: $error-color;
+      }
+    }
+  }
+}
+
+// ====================================
+// Password Wrapper con Toggle
+// ====================================
+.password-wrapper {
+  position: relative;
+  width: 100%;
+
+  input {
+    padding-right: 45px; // Espacio para el botón
+    width: 100%;
+  }
+
+  .toggle-password {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: $text-light; // Changed to $text-light for visibility
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+
+    &:hover {
+      color: $text-light;
+    }
+
+    ion-icon {
+      font-size: 1.2rem;
+      color: $text-light; // Explicitly set ion-icon color
+    }
+  }
+}
+
+// ====================================
+// Error Messages
+// ====================================
+.error-message {
+  font-size: 0.75rem;
+  color: #fca5a5;
+  margin-top: 6px;
+  padding-left: 4px;
+  line-height: 1.4;
+  animation: fadeIn 0.2s ease;
+
+  p {
+    margin: 4px 0;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shake {
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-5px);
+  }
+
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+// ====================================
+// Forgot Password Link (EXACTO del ejemplo)
+// ====================================
+.forgot {
+  display: flex;
+  justify-content: flex-end;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  color: $text-muted;
+  margin: 8px 0 14px 0;
+
+  a {
+    color: $text-light;
+    text-decoration: none;
+    font-size: 14px;
+
+    &:hover {
+      text-decoration: underline $accent-purple;
+    }
+  }
+}
+
+// ====================================
+// Sign In Button (EXACTO del ejemplo)
+// ====================================
+.sign {
+  display: block;
+  width: 100%;
+  background-color: $accent-purple;
+  padding: 0.75rem;
+  text-align: center;
+  color: $dark-surface;
+  border: none;
+  border-radius: 0.375rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Quicksand', sans-serif;
+  height: 44px; // Altura consistente
+  position: relative;
+
+  &:hover:not(:disabled) {
+    background-color: $accent-purple-hover;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  ion-spinner {
+    --color: #{$dark-surface};
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+// ====================================
+// Social Message (EXACTO del ejemplo)
+// ====================================
+.social-message {
+  display: flex;
+  align-items: center;
+  padding-top: 1rem;
+
+  .line {
+    height: 1px;
+    flex: 1 1 0%;
+    background-color: $dark-border;
+  }
+
+  .message {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: $text-muted;
+  }
+}
+
+// ====================================
+// Social Icons (EXACTO del ejemplo)
+// ====================================
+.social-icons {
+  display: flex;
+  justify-content: center;
+
+  .icon {
+    border-radius: 0.125rem;
+    padding: 0.75rem;
+    border: none;
+    background-color: transparent;
+    margin-left: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    &:first-child {
+      margin-left: 0;
+    }
+
+    svg {
+      height: 1.25rem;
+      width: 1.25rem;
+      fill: #fff;
+    }
+  }
+}
+
+// ====================================
+// Signup Link (EXACTO del ejemplo)
+// ====================================
+.signup {
+  text-align: center;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  color: $text-muted;
+  margin-top: 1rem;
+
+  a {
+    color: $text-light;
+    text-decoration: none;
+    font-size: 14px;
+
+    &:hover {
+      text-decoration: underline $accent-purple;
+    }
+  }
+}
+
+// ====================================
+// Responsive Adjustments
+// ====================================
+@media (max-width: 360px) {
+  .form-container {
+    padding: 1.5rem;
+  }
+}

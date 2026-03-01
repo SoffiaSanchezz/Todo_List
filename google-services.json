@@ -1,0 +1,77 @@
+{
+    "project_info": {
+        "project_number": "613562000814",
+        "firebase_url": "https://to-do-list-bce19-default-rtdb.firebaseio.com",
+        "project_id": "to-do-list-bce19",
+        "storage_bucket": "to-do-list-bce19.firebasestorage.app"
+    },
+    "client": [
+        {
+            "client_info": {
+                "mobilesdk_app_id": "1:613562000814:android:dcf3921b408e4780aad43f",
+                "android_client_info": {
+                    "package_name": "com.proyect.todolistapp"
+                }
+            },
+            "oauth_client": [
+                {
+                    "client_id": "613562000814-e3lnpffkal946cm3b0isnes2qssqll7r.apps.googleusercontent.com",
+                    "client_type": 1,
+                    "android_info": {
+                        "package_name": "com.proyect.todolistapp",
+                        "certificate_hash": "c75b216491d43db56904f0391b4826b7b6fa295d"
+                    }
+                },
+                {
+                    "client_id": "613562000814-9phqq8sfuulsobjuht2297784mqhrh11.apps.googleusercontent.com",
+                    "client_type": 3
+                }
+            ],
+            "api_key": [
+                {
+                    "current_key": "AIzaSyDYItaype261i4dcbSLGOyLEsljnVwuHjU"
+                }
+            ],
+            "services": {
+                "appinvite_service": {
+                    "other_platform_oauth_client": [
+                        {
+                            "client_id": "613562000814-9phqq8sfuulsobjuht2297784mqhrh11.apps.googleusercontent.com",
+                            "client_type": 3
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "client_info": {
+                "mobilesdk_app_id": "1:613562000814:android:cedb0a7184fdce4baad43f",
+                "android_client_info": {
+                    "package_name": "io.ionic.starter"
+                }
+            },
+            "oauth_client": [
+                {
+                    "client_id": "613562000814-9phqq8sfuulsobjuht2297784mqhrh11.apps.googleusercontent.com",
+                    "client_type": 3
+                }
+            ],
+            "api_key": [
+                {
+                    "current_key": "AIzaSyDYItaype261i4dcbSLGOyLEsljnVwuHjU"
+                }
+            ],
+            "services": {
+                "appinvite_service": {
+                    "other_platform_oauth_client": [
+                        {
+                            "client_id": "613562000814-9phqq8sfuulsobjuht2297784mqhrh11.apps.googleusercontent.com",
+                            "client_type": 3
+                        }
+                    ]
+                }
+            }
+        }
+    ],
+    "configuration_version": "1"
+}
