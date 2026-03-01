@@ -260,6 +260,18 @@ ion-header {
       ion-label {
         white-space: nowrap;
         font-weight: 600;
+        transition: color 0.2s ease-in-out;
+      }
+
+      &.segment-button-checked {
+        background-color: var(--ion-color-primary-tint); // Subtle background, adjust as needed
+        border-bottom: 2px solid var(--ion-color-primary); // Clear bottom border
+        transition: all 0.2s ease-in-out;
+        
+        ion-label {
+          font-weight: 700; // Even bolder text
+          color: var(--ion-color-primary-contrast); // Text color for contrast
+        }
       }
     }
   }

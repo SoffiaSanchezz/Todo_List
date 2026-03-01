@@ -1,49 +1,60 @@
 import { Injectable, inject } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { lastValueFrom, Observable } from "rxjs";
-import { environment } from "@environments/environment";
-import { ApiService } from "@shared/services/api/api.service";
+import { from, Observable, map } from "rxjs";
 import { AuthRepository } from "@auth/core/repositories/auth.repository";
 import { LoginRequestEntity } from "@auth/core/entities/login-information.entity";
-import { LoginResponseEntity } from "@auth/core/entities/login-response.entity";
 import { RequestRegisterEntity } from "@auth/core/entities/register-information.entity";
-import { RegisterResponseEntity } from "@auth/core/entities/register-response.entity";
+import {
+    Auth,
+    signInWithEmailAndPassword,
+    createUserWithEmailAndPassword,
+    GoogleAuthProvider,
+    signInWithCredential,
+    signInWithPopup
+} from '@angular/fire/auth';
+import { Platform } from '@ionic/angular';
 
-/**
- * Implementación real del repositorio de autenticación.
- * Se encarga de la comunicación con el backend mediante HTTP.
- */
 @Injectable({
     providedIn: 'root'
 })
-export class AuthImplementationRepository extends AuthRepository {
+    export class AuthImplementationRepository extends AuthRepository {
+        private auth = inject(Auth);
+        private platform = inject(Platform);
 
-    /**
-     * URL base de los servicios de autenticación.
-     */
-    public apiUrl: string;
-    private apiService = inject(ApiService);
+        constructor() {
+            super();
+        }
 
-    constructor() {
-        super();
-        this.apiUrl = environment?.API_SERVICES?.API_URL;
+    /*Inicio de sesión con Correo y Contraseña(Firebase Nativo)
+    Usando userName como email y passWord de tu entidad */
+    public authenticateUser(params: LoginRequestEntity): Observable < any > {
+        return from(signInWithEmailAndPassword(this.auth, params.userName, params.passWord)).pipe(
+            map(userCredential => userCredential.user));
     }
 
-    /**
-     * Envía la solicitud de inicio de sesión al backend.
-     */
-    public authenticateUser(
-        params: LoginRequestEntity
-    ): Observable<LoginResponseEntity> {
-        return this.apiService.post(`${this.apiUrl}/authenticate`, params);
+    /*Registro con Correo y Contraseña(Firebase Nativo) */
+    public registerUser(params: RequestRegisterEntity): Observable < any > {
+        return from(createUserWithEmailAndPassword(this.auth, params.email, params.passWord)).pipe(
+            map(userCredential => userCredential.user));
     }
 
-    /**
-     * Envía la solicitud de registro de usuario al backend.
-     */
-    public registerUser(
-        params: RequestRegisterEntity
-    ): Observable<RegisterResponseEntity> {
-        return this.apiService.post(`${this.apiUrl}/register`, params);
-    }
+    /** Inicio de sesión con Google (Nativo en APK / Popup en Web)*/
+    public loginWithGoogle(): Observable < any > {
+        if(this.platform.is('cordova') || this.platform.is('capacitor')) {
+        return from(this.nativeGoogleLogin());
+    } else {
+        const provider = new GoogleAuthProvider();
+        return from(signInWithPopup(this.auth, provider)).pipe(
+            map(userCredential => userCredential.user));
+    }}
+
+    private async nativeGoogleLogin(): Promise < any > {
+    // @ts-ignore
+    const res = await window.plugins.googleplus.login({
+        'webClientId': '613562000814-9phqq8sfuulsobjuht2297784mqhrh11.apps.googleusercontent.com',
+        'offline': false
+    });
+    const credential = GoogleAuthProvider.credential(res.idToken);
+    const userCredential = await signInWithCredential(this.auth, credential);
+    return userCredential.user;
+}
 }

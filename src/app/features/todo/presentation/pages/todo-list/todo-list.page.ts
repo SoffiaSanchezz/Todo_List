@@ -91,7 +91,7 @@ export class TodoListPage implements OnInit, OnDestroy {
   private async checkAuthentication() {
     const user = await this.authService.getCurrentUser();
     if (!user) {
-      this.router.navigateByUrl('/login', { replaceUrl: true });
+      this.router.navigateByUrl('/auth/login', { replaceUrl: true });
     }
   }
 
@@ -424,7 +424,7 @@ export class TodoListPage implements OnInit, OnDestroy {
     try {
       await this.authService.logout();
       loading.dismiss();
-      this.router.navigateByUrl('/login', { replaceUrl: true });
+      this.router.navigateByUrl('/auth/login', { replaceUrl: true });
       this.presentToast('Sesión cerrada correctamente.', 'success');
     } catch (error) {
       console.error('Error al cerrar sesión:', error);

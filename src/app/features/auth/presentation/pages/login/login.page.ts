@@ -1,5 +1,5 @@
 // src/app/login/login.page.ts
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
@@ -17,23 +17,21 @@ import { HeaderComponent } from 'src/app/shared/components/header/header.compone
   imports: [CommonModule, FormsModule, ReactiveFormsModule, IonicModule, HeaderComponent]
 })
 export class LoginPage implements OnInit {
-  email = '';
-  password = '';
   errorMessage: string | null = null;
-  loginForm: FormGroup
-  isLoading = false
-  passwordVisible = false
-
+  loginForm: FormGroup;
+  isLoading = false;
+  passwordVisible = false;
 
   constructor(
-    private SessionProviderservice: SessionProviderservice,
+    private sessionService: SessionProviderservice,
     private router: Router,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private ngZone: NgZone
   ) {
     this.loginForm = this.fb.group({
       email: ["", [Validators.required, Validators.email]],
       password: ["", [Validators.required, Validators.minLength(6)]],
-    })
+    });
   }
 
   ngOnInit() { }
@@ -41,54 +39,55 @@ export class LoginPage implements OnInit {
   async login() {
     this.errorMessage = null;
 
-    if (!this.email || !this.password) {
-      this.errorMessage = 'Por favor, introduce tu email y contraseña.';
+    if (this.loginForm.invalid) {
+      this.errorMessage = 'Por favor, introduce un email válido y una contraseña de al menos 6 caracteres.';
       return;
     }
 
+    // Extraemos los valores directamente del FormBuilder
+    const { email, password } = this.loginForm.value;
+
     try {
-      const userCredential = await this.SessionProviderservice.login(this.email, this.password);
+      this.isLoading = true;
+      const userCredential = await this.sessionService.login(email, password);
       console.log('Inicio de sesión exitoso:', userCredential.user);
-      this.router.navigateByUrl('/home');
+
+      this.ngZone.run(() => {
+        this.router.navigateByUrl('/todo', { replaceUrl: true });
+      });
+
     } catch (error: any) {
       console.error('Error al iniciar sesión:', error);
       this.handleAuthError(error);
-      switch (error.code) {
-        case 'auth/user-not-found':
-          this.errorMessage = 'No existe una cuenta con este email.';
-          break;
-        case 'auth/wrong-password':
-          this.errorMessage = 'Contraseña incorrecta.';
-          break;
-        case 'auth/invalid-email':
-          this.errorMessage = 'El formato del email es incorrecto.';
-          break;
-        case 'auth/too-many-requests':
-          this.errorMessage = 'Demasiados intentos fallidos. Inténtalo de nuevo más tarde.';
-          break;
-        default:
-          this.errorMessage = 'Ocurrió un error al iniciar sesión. Por favor, inténtalo de nuevo.';
-          break;
-      }
+    } finally {
+      this.isLoading = false;
     }
   }
 
   async loginWithGoogle() {
     this.errorMessage = null;
     try {
-      const userCredential = await this.SessionProviderservice.signInWithGoogle();
+      this.isLoading = true;
+      const userCredential = await this.sessionService.signInWithGoogle();
       console.log('Inicio de sesión exitoso con Google:', userCredential.user);
-      this.router.navigateByUrl('/todo');
+
+      this.ngZone.run(() => {
+        this.router.navigateByUrl('/todo', { replaceUrl: true });
+      });
+
     } catch (error: any) {
       console.error('Error al iniciar sesión con Google:', error);
       this.handleAuthError(error);
+    } finally {
+      this.isLoading = false;
     }
   }
 
   private handleAuthError(error: any) {
     switch (error.code) {
       case 'auth/user-not-found':
-        this.errorMessage = 'No existe una cuenta con este email.';
+      case 'auth/invalid-credential': // Firebase usa este para mayor seguridad
+        this.errorMessage = 'Credenciales inválidas. Revisa tu correo y contraseña.';
         break;
       case 'auth/wrong-password':
         this.errorMessage = 'Contraseña incorrecta.';
@@ -96,29 +95,16 @@ export class LoginPage implements OnInit {
       case 'auth/invalid-email':
         this.errorMessage = 'El formato del email es incorrecto.';
         break;
-      case 'auth/popup-closed-by-user':
-        this.errorMessage = 'El proceso de inicio de sesión con Google fue cancelado.';
-        break;
-      case 'auth/cancelled-popup-request':
-        this.errorMessage = 'Ya hay una ventana de inicio de sesión abierta. Por favor, ciérrala y vuelve a intentarlo.';
-        break;
-      case 'auth/account-exists-with-different-credential':
-        this.errorMessage = 'Ya existe una cuenta con este email, pero con otro método de inicio de sesión. Intenta iniciar sesión con tu método original.';
-        break;
       case 'auth/network-request-failed':
-        this.errorMessage = 'Problema de conexión a la red. Por favor, inténtalo de nuevo.';
-        break;
-      case 'auth/too-many-requests':
-        this.errorMessage = 'Demasiados intentos fallidos. Inténtalo de nuevo más tarde.';
+        this.errorMessage = 'Problema de conexión a la red.';
         break;
       default:
-        this.errorMessage = 'Ocurrió un error al iniciar sesión. Por favor, inténtalo de nuevo.';
+        this.errorMessage = 'Error al iniciar sesión. Verifica tus datos.';
         break;
     }
   }
 
-
   togglePasswordVisibility() {
-    this.passwordVisible = !this.passwordVisible
+    this.passwordVisible = !this.passwordVisible;
   }
 }
