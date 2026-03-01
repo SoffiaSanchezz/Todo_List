@@ -1,6 +1,6 @@
 <ion-header [translucent]="true">
   <ion-toolbar color="primary">
-    <ion-title>To-Do List Kanban</ion-title>
+    <ion-title>Kanban de Tareas</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="openCreateCategoryModal()">
         <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
@@ -13,7 +13,7 @@
   <ion-toolbar>
     <ion-segment [(ngModel)]="filteredCategoryId" (ionChange)="filterTasks($event)">
       <ion-segment-button value="all">
-        <ion-label>All Tasks</ion-label>
+        <ion-label>Todas las Tareas</ion-label>
       </ion-segment-button>
       <ion-segment-button *ngFor="let category of categories" [value]="category.id">
         <ion-label>{{ category.name }}</ion-label>
@@ -32,7 +32,7 @@
         </ion-card-header>
         <!-- Made Add Task button more discrete with smaller icon -->
         <ion-button expand="block" fill="clear" (click)="openCreateTaskModal(column.status)" class="add-task-btn">
-          <ion-icon name="add-circle-outline" class="small-icon"></ion-icon> Add Task
+          <ion-icon name="add-circle-outline" class="small-icon"></ion-icon> Añadir Tarea
         </ion-button>
       </ion-card>
 

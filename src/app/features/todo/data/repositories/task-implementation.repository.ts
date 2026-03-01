@@ -62,7 +62,7 @@ export class TaskImplementationRepository extends TaskRepository {
   changeTaskStatus(id: string, status: TaskStatus): Observable<Task> {
     return this.getTaskById(id).pipe(
       map(task => {
-        if (!task) throw new Error(`Task with ID ${id} not found.`);
+        if (!task) throw new Error(`Tarea con ID ${id} no encontrada.`);
         const updatedTask = { ...task, status, updatedAt: new Date() };
         if (status === TaskStatus.COMPLETED) {
           updatedTask.completed = true;
@@ -91,7 +91,7 @@ export class TaskImplementationRepository extends TaskRepository {
   markTaskAsCompleted(id: string, completed: boolean): Observable<Task> {
     return this.getTaskById(id).pipe(
       map(task => {
-        if (!task) throw new Error(`Task with ID ${id} not found.`);
+        if (!task) throw new Error(`Tarea con ID ${id} no encontrada.`);
         const updatedTask = { ...task, completed, updatedAt: new Date() };
         if (completed) {
           updatedTask.status = TaskStatus.COMPLETED;

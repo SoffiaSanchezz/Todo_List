@@ -1,8 +1,8 @@
 export enum TaskStatus {
-  NEW = 'new',
-  SCHEDULED = 'scheduled',
-  IN_PROGRESS = 'in_progress',
-  COMPLETED = 'completed',
+  NEW = 'nueva',
+  SCHEDULED = 'programada',
+  IN_PROGRESS = 'en_progreso',
+  COMPLETED = 'completada',
 }
 
 export interface Task {

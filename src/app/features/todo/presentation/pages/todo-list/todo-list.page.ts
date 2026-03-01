@@ -87,16 +87,16 @@ export class TodoListPage implements OnInit, OnDestroy {
 
   getTaskStatusTitle(status: TaskStatus): string {
     switch (status) {
-      case TaskStatus.NEW: return 'New';
-      case TaskStatus.SCHEDULED: return 'Scheduled';
-      case TaskStatus.IN_PROGRESS: return 'In Progress';
-      case TaskStatus.COMPLETED: return 'Completed';
+      case TaskStatus.NEW: return 'Nueva';
+      case TaskStatus.SCHEDULED: return 'Programada';
+      case TaskStatus.IN_PROGRESS: return 'En Progreso';
+      case TaskStatus.COMPLETED: return 'Completada';
       default: return '';
     }
   }
 
   getCategoryName(categoryId: string | undefined): string {
-    return this.categories.find(c => c.id === categoryId)?.name || 'No Category';
+    return this.categories.find(c => c.id === categoryId)?.name || 'Sin Categoría';
   }
 
   getCategoryColor(categoryId: string | undefined): string {
