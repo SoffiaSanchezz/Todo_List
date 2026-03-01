@@ -28,7 +28,7 @@ export class LocalStorageDatasource {
       const data = localStorage.getItem(this._storageKeyPrefix + collectionName);
       return of(data ? JSON.parse(data) : []);
     } catch (error) {
-      return throwError(() => new Error(`Error al obtener ${collectionName} del almacenamiento local: ${error}`));
+      return throwError(() => new Error(`Error getting ${collectionName} from local storage: ${error}`));
     }
   }
 
@@ -77,7 +77,7 @@ export class LocalStorageDatasource {
               subscriber.next(newItem);
               subscriber.complete();
             } catch (error) {
-              subscriber.error(new Error(`Error al crear ${collectionName} en el almacenamiento local: ${error}`));
+              subscriber.error(new Error(`Error creating ${collectionName} in local storage: ${error}`));
             }
           },
           error: (err) => subscriber.error(err)
@@ -106,10 +106,10 @@ export class LocalStorageDatasource {
                 subscriber.next(item);
                 subscriber.complete();
               } catch (error) {
-                subscriber.error(new Error(`Error al actualizar ${collectionName} en el almacenamiento local: ${error}`));
+                subscriber.error(new Error(`Error updating ${collectionName} in local storage: ${error}`));
               }
             } else {
-              subscriber.error(new Error(`Elemento con ID ${item.id} no encontrado en ${collectionName}.`));
+              subscriber.error(new Error(`Item with ID ${item.id} not found in ${collectionName}.`));
             }
           },
           error: (err) => subscriber.error(err)
@@ -135,7 +135,7 @@ export class LocalStorageDatasource {
               subscriber.next();
               subscriber.complete();
             } catch (error) {
-              subscriber.error(new Error(`Error al eliminar ${collectionName} del almacenamiento local: ${error}`));
+              subscriber.error(new Error(`Error deleting ${collectionName} from local storage: ${error}`));
             }
           },
           error: (err) => subscriber.error(err)

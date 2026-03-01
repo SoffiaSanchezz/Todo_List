@@ -12,7 +12,7 @@ import type { Category } from "../../../domain/entities/category.entity"
 })
 export class CategoryChipComponent implements OnInit {
   @Input() category?: Category
-  @Output() editCategory = new EventEmitter<void>()
+  @Output() editCategory = new EventEmitter<void>()  // Este evento YA existe
 
   textColor = "#FFFFFF"
 
@@ -23,7 +23,7 @@ export class CategoryChipComponent implements OnInit {
   }
 
   onEditCategory() {
-    this.editCategory.emit()
+    this.editCategory.emit()  // Este método YA emite el evento
   }
 
   private getContrastColor(hexColor: string): string {

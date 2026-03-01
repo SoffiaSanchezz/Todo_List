@@ -11,6 +11,7 @@ import { ApiService } from '@shared/services/api/api.service';
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { provideAuth, getAuth } from '@angular/fire/auth';
 import { ServiceProviderModule } from './app/core/services-providers/service-provider.modules';
+import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 
 const firebaseConfig = {
   apiKey: environment.firebase.apiKey,
@@ -35,6 +36,7 @@ bootstrapApplication(LayoutComponent, {
     ApiService,
     provideHttpClient(withFetch()),
     provideFirebaseApp(() => initializeApp(firebaseConfig)),
+    provideFirestore(() => getFirestore()),
     provideAuth(() => getAuth()),
     importProvidersFrom(ServiceProviderModule)
   ],
