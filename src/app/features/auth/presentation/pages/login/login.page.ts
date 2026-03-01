@@ -38,26 +38,22 @@ export class LoginPage implements OnInit {
 
   async login() {
     this.errorMessage = null;
-
     if (this.loginForm.invalid) {
-      this.errorMessage = 'Por favor, introduce un email válido y una contraseña de al menos 6 caracteres.';
+      this.errorMessage = 'Formulario inválido. Revisa los campos.';
       return;
     }
 
-    // Extraemos los valores directamente del FormBuilder
     const { email, password } = this.loginForm.value;
 
     try {
       this.isLoading = true;
-      const userCredential = await this.sessionService.login(email, password);
-      console.log('Inicio de sesión exitoso:', userCredential.user);
+      const result = await this.sessionService.login(email, password);
 
       this.ngZone.run(() => {
-        this.router.navigateByUrl('/todo', { replaceUrl: true });
+        this.router.navigate(['/todo'], { replaceUrl: true });
       });
 
     } catch (error: any) {
-      console.error('Error al iniciar sesión:', error);
       this.handleAuthError(error);
     } finally {
       this.isLoading = false;
@@ -68,15 +64,15 @@ export class LoginPage implements OnInit {
     this.errorMessage = null;
     try {
       this.isLoading = true;
-      const userCredential = await this.sessionService.signInWithGoogle();
-      console.log('Inicio de sesión exitoso con Google:', userCredential.user);
+      const result = await this.sessionService.signInWithGoogle();
 
-      this.ngZone.run(() => {
-        this.router.navigateByUrl('/todo', { replaceUrl: true });
-      });
+      setTimeout(() => {
+        this.ngZone.run(() => {
+          this.router.navigate(['/todo'], { replaceUrl: true });
+        });
+      }, 500);
 
     } catch (error: any) {
-      console.error('Error al iniciar sesión con Google:', error);
       this.handleAuthError(error);
     } finally {
       this.isLoading = false;
@@ -84,23 +80,19 @@ export class LoginPage implements OnInit {
   }
 
   private handleAuthError(error: any) {
-    switch (error.code) {
-      case 'auth/user-not-found':
-      case 'auth/invalid-credential': // Firebase usa este para mayor seguridad
-        this.errorMessage = 'Credenciales inválidas. Revisa tu correo y contraseña.';
-        break;
-      case 'auth/wrong-password':
-        this.errorMessage = 'Contraseña incorrecta.';
-        break;
-      case 'auth/invalid-email':
-        this.errorMessage = 'El formato del email es incorrecto.';
-        break;
-      case 'auth/network-request-failed':
-        this.errorMessage = 'Problema de conexión a la red.';
-        break;
-      default:
-        this.errorMessage = 'Error al iniciar sesión. Verifica tus datos.';
-        break;
+    if (error.code === 'auth/popup-closed-by-user') return;
+
+    // Mostramos el código de error real para diagnosticar
+    const errorCode = error.code || 'Desconocido';
+    const errorMsg = error.message || 'Error sin mensaje';
+
+    this.errorMessage = `Error (${errorCode}): ${errorMsg}`;
+
+    // Ayuda específica según el código
+    if (errorCode === 'auth/network-request-failed') {
+      this.errorMessage = 'Error de red: El APK no tiene acceso a internet o el servidor está bloqueado.';
+    } else if (errorCode === 'auth/invalid-api-key') {
+      this.errorMessage = 'La API Key de Firebase es inválida o no está configurada para este APK.';
     }
   }
 
