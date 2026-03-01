@@ -49,7 +49,7 @@ export class CategoryModalComponent implements OnInit {
     if (this.isEditMode && this.category) {
       const updatedCategory: Category = { ...this.category, ...categoryData };
       this.todoInteractor.editCategory(updatedCategory).pipe(take(1)).subscribe({
-        next: () => this.modalController.dismiss(true),
+        next: () => this.modalController.dismiss(updatedCategory),
         error: (err) => console.error('Error updating category', err),
       });
     } else {
@@ -58,7 +58,7 @@ export class CategoryModalComponent implements OnInit {
         color: categoryData.color,
       };
       this.todoInteractor.createCategory(newCategory).pipe(take(1)).subscribe({
-        next: () => this.modalController.dismiss(true),
+        next: () => this.modalController.dismiss(newCategory),
         error: (err) => console.error('Error creating category', err),
       });
     }
