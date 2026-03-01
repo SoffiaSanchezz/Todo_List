@@ -5,16 +5,20 @@
 
 <img src="https://img.shields.io/badge/Ionic-7.0-3880FF?style=for-the-badge&logo=ionic&logoColor=white" alt="Ionic">
 <img src="https://img.shields.io/badge/Angular-17-DD0031?style=for-the-badge&logo=angular&logoColor=white" alt="Angular">
+<img src="https://img.shields.io/badge/Cordova-11.0-E8E8E8?style=for-the-badge&logo=apachecordova&logoColor=black" alt="Cordova">
 <img src="https://img.shields.io/badge/TypeScript-5.0-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript">
 <img src="https://img.shields.io/badge/Firebase-Auth-FFCA28?style=for-the-badge&logo=firebase&logoColor=black" alt="Firebase">
 
 **Una aplicación móvil moderna para gestionar tus tareas con estilo** 🚀
+
+[📥 Descargar APK](#-descargar-aplicación) • [📋 Trello](https://trello.com/b/3C8tf2PE/todolist) • 
 
 [Demo](#-capturas-de-pantalla) • [Características](#-características-principales) • [Instalación](#-instalación) • [Documentación](#-documentación)
 
 </div>
 
 ---
+
 
 ## 📑 Tabla de Contenidos
 
@@ -120,6 +124,7 @@ Demostrar habilidades profesionales en:
 | Categoría | Tecnologías |
 |-----------|-------------|
 | **Frontend** | ![Ionic](https://img.shields.io/badge/Ionic-7.0-3880FF?logo=ionic&logoColor=white) ![Angular](https://img.shields.io/badge/Angular-17-DD0031?logo=angular&logoColor=white) ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?logo=typescript&logoColor=white) |
+| **Mobile Platform** | ![Cordova](https://img.shields.io/badge/Cordova-11.0-E8E8E8?logo=apachecordova&logoColor=black) |
 | **Estado** | ![LocalStorage](https://img.shields.io/badge/LocalStorage-gray?logo=javascript&logoColor=white) |
 | **Autenticación** | ![Firebase](https://img.shields.io/badge/Firebase-Auth-FFCA28?logo=firebase&logoColor=black) |
 | **Estilos** | ![SCSS](https://img.shields.io/badge/SCSS-CC6699?logo=sass&logoColor=white) |
@@ -170,8 +175,7 @@ npm install -g @ionic/cli
 ### 📦 Paso 2: Clonar el Repositorio
 
 ```bash
-git clone https://github.com/tu-usuario/todo-list-ionic.git
-cd todo-list-ionic
+https://github.com/SoffiaSanchezz/ToDo-List.git
 ```
 
 ### ⚙️ Paso 3: Instalar Dependencias
@@ -207,11 +211,14 @@ export const environment = {
 # Modo desarrollo (navegador)
 ionic serve
 
+# Modo desarrollo con livereload
+ionic serve --lab
+
 # Modo desarrollo (Android)
-ionic capacitor run android
+ionic cordova run android
 
 # Modo desarrollo (iOS)
-ionic capacitor run ios
+ionic cordova run ios
 ```
 
 ---
@@ -324,13 +331,10 @@ MIT License - Siéntete libre de usar este proyecto para aprender y crear
 
 ---
 
-## 📞 Contacto
+## ❤️ Autor
 
-**Tu Nombre** - [@tu_twitter](https://twitter.com/tu_twitter)
+- [SofiaSanchez](https://github.com/SoffiaSanchezz)
 
-📧 Email: tu.email@ejemplo.com
-
-🔗 Proyecto: [https://github.com/tu-usuario/todo-list-ionic](https://github.com/tu-usuario/todo-list-ionic)
 
 ---
 
