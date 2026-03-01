@@ -1,0 +1,22 @@
+rules_version = '2';
+    service cloud.firestore {
+      match /databases/{database}/documents {
+        match /tasks/{taskId} {
+          // Permite crear una tarea si el usuario está autenticado
+          allow create: if request.auth != null;
+
+          // Permite leer, actualizar o eliminar una tarea
+          // SOLO si el usuario autenticado es el propietario de esa tarea.
+          // Asume que cada documento de tarea tiene un campo 'userId'
+          // que almacena el UID del usuario que creó la tarea.
+          allow read, update, delete: if request.auth != null && request.auth.uid == resource.data.userId;
+        }
+
+        // Si tienes otros datos en el futuro, por ejemplo, perfiles de usuario,
+        // necesitarías añadir más reglas aquí:
+        // match /users/{userId} {
+        //   allow read: if request.auth != null && request.auth.uid == userId;
+        //   allow write: if false; // Solo el sistema puede actualizar perfiles o no se permite
+        // }
+      }
+    }
