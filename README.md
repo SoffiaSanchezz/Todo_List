@@ -317,9 +317,16 @@ todo-list-ionic/
   <!-- APK -->
   <div style="border: 1px solid #ddd; padding: 20px; border-radius: 12px; text-align: center; width: 220px; box-shadow: 2px 2px 8px rgba(0,0,0,0.1);">
     <h3>📥 APK</h3>
-    <a href="https://drive.google.com/file/d/1goMBCKXdXOcD4Wx7rOiaL3czC5TtBDAY/view?usp=sharing" style="text-decoration: none; font-weight: bold; color: #1e90ff;">Descargar</a>
+    <a 
+      href="https://drive.google.com/file/d/1goMBCKXdXOcD4Wx7rOiaL3czC5TtBDAY/view?usp=sharing"
+      target="_blank"
+      rel="noopener noreferrer"
+      style="text-decoration: none; font-weight: bold; color: #1e90ff;"
+    >
+      Descargar
+    </a>
     <p style="font-size: 13px; color: #555; margin-top: 10px; line-height: 1.4;">
-      ⚠️ Para pruebas:  
+      ⚠️ Para pruebas:<br/>
       <b>Usuario:</b> user@admin.com<br/>
       <b>Contraseña:</b> password1234
     </p>
@@ -328,9 +335,17 @@ todo-list-ionic/
   <!-- Trello -->
   <div style="border: 1px solid #ddd; padding: 20px; border-radius: 12px; text-align: center; width: 220px; box-shadow: 2px 2px 8px rgba(0,0,0,0.1);">
     <h3>📋 Trello</h3>
-    <a href="https://trello.com/b/3C8tf2PE/todolist" style="text-decoration: none; font-weight: bold; color: #1e90ff;">Ver tablero</a>
+    <a 
+      href="https://trello.com/b/3C8tf2PE/todolist"
+      target="_blank"
+      rel="noopener noreferrer"
+      style="text-decoration: none; font-weight: bold; color: #1e90ff;"
+    >
+      Ver tablero
+    </a>
   </div>
 </div>
+
 
 
 ## 📄 Licencia
