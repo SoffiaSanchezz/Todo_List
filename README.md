@@ -11,7 +11,6 @@
 
 **Una aplicación móvil moderna para gestionar tus tareas con estilo** 🚀
 
-[📥 Descargar APK](#-descargar-aplicación) • [📋 Trello](https://trello.com/b/3C8tf2PE/todolist) • 
 
 [Demo](#-capturas-de-pantalla) • [Características](#-características-principales) • [Instalación](#-instalación) • [Documentación](#-documentación)
 
@@ -106,14 +105,11 @@ Demostrar habilidades profesionales en:
 
 ## 📸 Capturas de Pantalla
 
-> _Próximamente: Capturas de pantalla de la aplicación_
 
-```
-┌─────────────┐  ┌─────────────┐  ┌─────────────┐
-│   Login     │  │   Tareas    │  │  Categorías │
-│   Screen    │  │   Screen    │  │   Screen    │
-└─────────────┘  └─────────────┘  └─────────────┘
-```
+
+
+<!-- <img width="300" align="center" src="https://github.com/SoffiaSanchezz/AgroSena/blob/main/img/Logo(1).png" /> -->
+<img align="center" src="https://github.com/SoffiaSanchezz/ToDo-List/blob/56b74c69522f2937e54217f8be86a2b5e13aa0f1/src/assets/img/vista.jpg" />
 
 ---
 
@@ -300,26 +296,42 @@ todo-list-ionic/
 └── package.json               # Dependencias del proyecto
 ```
 
----
+<div style="text-align: center;">
+  <!-- Primera imagen con título -->
+  <div style="display: inline-block; text-align: center; margin-right: 40px;">
+    <h4>Estructura Base</h4>
+    <img src="https://github.com/SoffiaSanchezz/ToDo-List/blob/56b74c69522f2937e54217f8be86a2b5e13aa0f1/src/assets/img/arqbase.png" alt="Arquitectura Base" width="300"/>
+  </div>
 
-## 🤝 Contribución
-
-¡Las contribuciones son bienvenidas! Si quieres mejorar este proyecto:
-
-1. 🍴 **Fork** el proyecto
-2. 🌿 Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. 💾 Commit tus cambios (`git commit -m 'Add: AmazingFeature'`)
-4. 📤 Push a la rama (`git push origin feature/AmazingFeature`)
-5. 🔁 Abre un **Pull Request**
-
-### 📝 Guía de Estilo
-
-- Usa **Conventional Commits**
-- Escribe código limpio y documentado
-- Añade tests para nuevas funcionalidades
-- Actualiza la documentación
+  <!-- Segunda imagen con título -->
+  <div style="display: inline-block; text-align: center;">
+    <h4>Arquitectura Limpia</h4>
+    <img src="https://github.com/SoffiaSanchezz/ToDo-List/blob/56b74c69522f2937e54217f8be86a2b5e13aa0f1/src/assets/img/image.png" alt="Arquitectura Limpia" width="300"/>
+  </div>
+</div>
 
 ---
+<h2>🤖 Recursos del Proyecto</h2>
+
+<div style="display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; margin-top: 10px;">
+  <!-- APK -->
+  <div style="border: 1px solid #ddd; padding: 20px; border-radius: 12px; text-align: center; width: 220px; box-shadow: 2px 2px 8px rgba(0,0,0,0.1);">
+    <h3>📥 APK</h3>
+    <a href="https://drive.google.com/file/d/1goMBCKXdXOcD4Wx7rOiaL3czC5TtBDAY/view?usp=sharing" style="text-decoration: none; font-weight: bold; color: #1e90ff;">Descargar</a>
+    <p style="font-size: 13px; color: #555; margin-top: 10px; line-height: 1.4;">
+      ⚠️ Para pruebas:  
+      <b>Usuario:</b> user@admin.com<br/>
+      <b>Contraseña:</b> password1234
+    </p>
+  </div>
+
+  <!-- Trello -->
+  <div style="border: 1px solid #ddd; padding: 20px; border-radius: 12px; text-align: center; width: 220px; box-shadow: 2px 2px 8px rgba(0,0,0,0.1);">
+    <h3>📋 Trello</h3>
+    <a href="https://trello.com/b/3C8tf2PE/todolist" style="text-decoration: none; font-weight: bold; color: #1e90ff;">Ver tablero</a>
+  </div>
+</div>
+
 
 ## 📄 Licencia
 
