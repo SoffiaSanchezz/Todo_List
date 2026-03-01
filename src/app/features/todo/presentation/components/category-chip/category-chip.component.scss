@@ -1,0 +1,22 @@
+ion-chip {
+  height: 24px;
+  font-size: 0.8em;
+  font-weight: 600;
+  padding: 0 8px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ion-color-dark); // Default text color, will be overridden by --ion-color if set
+
+  ion-label {
+    margin-inline-end: 4px;
+  }
+
+  ion-icon {
+    font-size: 0.9em;
+    cursor: pointer;
+    margin-inline-start: 4px;
+    color: var(--ion-color-dark); // Default icon color
+  }
+}

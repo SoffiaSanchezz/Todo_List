@@ -1,0 +1,53 @@
+<!-- Encabezado del modal -->
+<ion-header>
+  <ion-toolbar>
+
+    <!-- Botón para cerrar/cancelar -->
+    <ion-buttons slot="start">
+      <ion-button (click)="onCancel()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <!-- Título dinámico según el modo -->
+    <ion-title>
+      {{ isEditMode ? 'Edit Category' : 'Create Category' }}
+    </ion-title>
+
+    <!-- Botón para guardar -->
+    <ion-buttons slot="end">
+      <ion-button (click)="onSave()" [disabled]="!categoryForm.valid">
+        <ion-icon name="checkmark"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+  </ion-toolbar>
+</ion-header>
+
+<!-- Contenido del formulario -->
+<ion-content class="ion-padding">
+
+  <!-- Formulario reactivo de categoría -->
+  <form [formGroup]="categoryForm">
+
+    <!-- Campo nombre de la categoría -->
+    <ion-item>
+      <ion-input label="Category Name" labelPlacement="floating" formControlName="name"
+        placeholder="Enter category name">
+      </ion-input>
+    </ion-item>
+
+    <!-- Selector de color -->
+    <ion-item>
+      <ion-label>Color</ion-label>
+      <input type="color" formControlName="color" class="color-input">
+    </ion-item>
+
+  </form>
+
+  <!-- Botón para eliminar (solo en modo edición) -->
+  <ion-button *ngIf="isEditMode" expand="block" color="danger" class="ion-margin-top" (click)="onDelete()">
+    Delete Category
+  </ion-button>
+
+</ion-content>
