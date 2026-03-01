@@ -1,17 +1,20 @@
+import { Timestamp } from '@angular/fire/firestore';
+
 export enum TaskStatus {
-  NEW = 'nueva',
-  SCHEDULED = 'programada',
-  IN_PROGRESS = 'en_progreso',
-  COMPLETED = 'completada',
+  NEW = 'NEW',
+  SCHEDULED = 'SCHEDULED',
+  IN_PROGRESS = 'IN_PROGRESS',
+  COMPLETED = 'COMPLETED',
 }
 
 export interface Task {
   id: string;
+  userId: string;
   title: string;
-  description: string;
-  status: TaskStatus;
-  categoryId?: string; // Optional: Link to a Category
-  completed: boolean; // Flag for completed status
+  description?: string;
+  status: string;
+  categoryId?: string;
+  completed: boolean;
   createdAt: Date;
   updatedAt: Date;
 }

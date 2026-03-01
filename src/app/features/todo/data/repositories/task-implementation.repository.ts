@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
+import { Timestamp } from '@angular/fire/firestore';
 import { Task, TaskStatus } from '../../domain/entities/task.entity';
 import { TaskRepository } from '../../domain/repositories/task.repository';
 import { LocalStorageDatasource } from '../datasources/local-storage.datasource';
@@ -19,6 +20,7 @@ export class TaskImplementationRepository extends TaskRepository {
       // Ensure dates are re-hydrated if needed, as localStorage stores them as strings
       map(tasks => tasks.map(task => ({
         ...task,
+        status: task.status as TaskStatus,
         createdAt: new Date(task.createdAt),
         updatedAt: new Date(task.updatedAt)
       })))
@@ -29,16 +31,18 @@ export class TaskImplementationRepository extends TaskRepository {
     return this.localStorageDatasource.getById<Task>(TASK_COLLECTION, id).pipe(
       map(task => task ? {
         ...task,
+        status: task.status as TaskStatus,
         createdAt: new Date(task.createdAt),
         updatedAt: new Date(task.updatedAt)
       } : undefined)
     );
   }
 
-  createTask(task: Omit<Task, 'id' | 'createdAt' | 'updatedAt' | 'completed'>): Observable<Task> {
+  createTask(task: Omit<Task, 'id' | 'createdAt' | 'updatedAt' | 'completed' | 'userId'>): Observable<Task> {
     const now = new Date();
     const newTask: Task = {
       ...task,
+      userId: 'local', // For local storage, use a default userId
       status: task.status || TaskStatus.NEW, // Default status
       completed: false, // Default to not completed
       createdAt: now,
@@ -62,7 +66,7 @@ export class TaskImplementationRepository extends TaskRepository {
   changeTaskStatus(id: string, status: TaskStatus): Observable<Task> {
     return this.getTaskById(id).pipe(
       map(task => {
-        if (!task) throw new Error(`Tarea con ID ${id} no encontrada.`);
+        if (!task) throw new Error(`Task with ID ${id} not found.`);
         const updatedTask = { ...task, status, updatedAt: new Date() };
         if (status === TaskStatus.COMPLETED) {
           updatedTask.completed = true;
@@ -91,7 +95,7 @@ export class TaskImplementationRepository extends TaskRepository {
   markTaskAsCompleted(id: string, completed: boolean): Observable<Task> {
     return this.getTaskById(id).pipe(
       map(task => {
-        if (!task) throw new Error(`Tarea con ID ${id} no encontrada.`);
+        if (!task) throw new Error(`Task with ID ${id} not found.`);
         const updatedTask = { ...task, completed, updatedAt: new Date() };
         if (completed) {
           updatedTask.status = TaskStatus.COMPLETED;
