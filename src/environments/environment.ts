@@ -1,16 +1,42 @@
-// This file can be replaced during build by using the `fileReplacements` array.
-// `ng build` replaces `environment.ts` with `environment.prod.ts`.
-// The list of file replacements can be found in `angular.json`.
-
-export const environment = {
-  production: false
-};
-
-/*
- * For easier debugging in development mode, you can import the following file
- * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
- *
- * This import should be commented out in production mode because it will have a negative impact
- * on performance if an error is thrown.
+/**
+ * Configuración del entorno LOCAL de la aplicación.
+ * Este archivo se utiliza durante el desarrollo.
  */
-// import 'zone.js/plugins/zone-error';  // Included with Angular CLI.
+export const environment = {
+
+  /**
+   * Configuración de los servicios API.
+   */
+  API_SERVICES: {
+    /**
+     * URL base para el consumo de servicios backend.
+     */
+    API_URL: '/api/',
+  },
+
+  /**
+   * Nombre del entorno actual.
+   */
+  environment: 'LOCAL',
+
+  /**
+   * Indica si la aplicación está en modo producción.
+   */
+  production: false,
+
+  /**
+   * Indica si se está usando configuración local.
+   */
+  local: true,
+
+  /**
+   * Host base de la aplicación.
+   */
+  host: '/',
+
+  /**
+   * Clave secreta para configuraciones internas
+   * (no usar valores sensibles en entornos locales).
+   */
+  secretKey: '',
+};
