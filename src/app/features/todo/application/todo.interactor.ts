@@ -53,7 +53,7 @@ export class TodoInteractor {
   }
 
   // --- Task Operations ---
-  createTask(task: Omit<Task, 'id' | 'createdAt' | 'updatedAt' | 'completed'>): Observable<Task> {
+  createTask(task: Omit<Task, 'id' | 'createdAt' | 'updatedAt' | 'completed' | 'userId'>): Observable<Task> {
     return this.createTaskUseCase.execute(task);
   }
 

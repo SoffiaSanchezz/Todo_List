@@ -1,15 +1,29 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Timestamp } from '@angular/fire/firestore';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IonicModule, ModalController, PopoverController, AlertController, ToastController, MenuController } from '@ionic/angular';
-import { TodoInteractor } from '../../../application/todo.interactor';
-import { Category } from '../../../domain/entities/category.entity';
-import { Task, TaskStatus } from '../../../domain/entities/task.entity';
+import {
+  IonicModule,
+  ModalController,
+  PopoverController,
+  LoadingController,
+  AlertController,
+  ToastController,
+  MenuController
+} from '@ionic/angular';
+import { Router } from '@angular/router';
 import { TaskCardComponent } from '../../components/task-card/task-card.component';
 import { TaskModalComponent } from '../../components/task-modal/task-modal.component';
 import { CategoryModalComponent } from '../../components/category-modal/category-modal.component';
-import { map, Observable, Subject, take, takeUntil } from 'rxjs';
+import { Subject, Subscription, takeUntil } from 'rxjs';
+import { SessionProviderservice } from '@shared/services/auth/session-provider.service';
+import { TaskService } from '@shared/services/task/task.service';
+import { CategoryService } from '@shared/services/category/category.service';
+import { Task, TaskStatus } from '../../../domain/entities/task.entity';
+import { Category } from '../../../domain/entities/category.entity';
+import { CommonModule } from '@angular/common';
 
+// Definir los TaskStatus si no están en tu interfaz de Task
+// Extender la interfaz Task del servicio para incluir propiedades adicionales
 interface KanbanColumn {
   status: TaskStatus;
   title: string;
@@ -38,47 +52,94 @@ export class TodoListPage implements OnInit, OnDestroy {
   columns: KanbanColumn[] = [];
 
   private destroy$ = new Subject<void>();
+  private tasksSubscription: Subscription | undefined;
+  private categoriesSubscription: Subscription | undefined;
+
+  // Servicios Firebase inyectados
+  private authService = inject(SessionProviderservice);
+  private taskService = inject(TaskService);
+  private categoryService = inject(CategoryService);
+  private router = inject(Router);
+  private loadingCtrl = inject(LoadingController);
+  private alertCtrl = inject(AlertController);
+  private toastCtrl = inject(ToastController);
+  private menuCtrl = inject(MenuController); // Inject MenuController
 
   constructor(
-    private todoInteractor: TodoInteractor,
     private modalController: ModalController,
     private popoverController: PopoverController,
-    private alertController: AlertController,
-    private toastController: ToastController,
-    private menuController: MenuController, // Inject MenuController
-    private cdr: ChangeDetectorRef // For ChangeDetectionStrategy.OnPush
-  ) {}
+    private cdr: ChangeDetectorRef
+  ) { }
+
 
   ngOnInit() {
-    // ionViewWillEnter is generally better for loading data in Ionic pages
-  }
-
-  ionViewWillEnter() {
+    this.checkAuthentication();
     this.loadCategories();
     this.loadTasks();
   }
-  
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+    if (this.tasksSubscription) {
+      this.tasksSubscription.unsubscribe();
+    }
+    if (this.categoriesSubscription) {
+      this.categoriesSubscription.unsubscribe();
+    }
   }
 
-  loadCategories() {
-    this.todoInteractor.getAllCategories().pipe(
-      takeUntil(this.destroy$)
-    ).subscribe(categories => {
-      this.categories = categories;
-      this.cdr.detectChanges(); // Update view
+  private async checkAuthentication() {
+    const user = await this.authService.getCurrentUser();
+    if (!user) {
+      this.router.navigateByUrl('/login', { replaceUrl: true });
+    }
+  }
+
+  async loadCategories() {
+    const loading = await this.presentLoading('Cargando categorías...');
+
+    this.categoriesSubscription = this.categoryService.getAllCategories().subscribe({
+      next: (categories) => {
+        this.categories = categories;
+        this.cdr.detectChanges();
+        loading.dismiss();
+      },
+      error: (err) => {
+        console.error('Error al cargar categorías:', err);
+        loading.dismiss();
+        this.presentToast('Error al cargar categorías.', 'danger');
+      }
     });
   }
 
-  loadTasks() {
-    this.todoInteractor.getAllTasks().pipe(
-      takeUntil(this.destroy$)
-    ).subscribe(tasks => {
-      this.tasks = tasks;
-      this.groupTasksByStatus();
-      this.cdr.detectChanges(); // Update view
+  async loadTasks() {
+    const loading = await this.presentLoading('Cargando tareas...');
+
+    this.tasksSubscription = this.taskService.getTasks().subscribe({
+      next: (tasks) => {
+        // Mapear las tareas del servicio a Task del dominio
+        this.tasks = tasks.map(task => ({
+          id: task.id,
+          userId: task.userId,
+          title: task.title,
+          description: task.description || '',
+          status: task.status,
+          categoryId: task.categoryId,
+          completed: task.completed,
+          createdAt: task.createdAt instanceof Timestamp ? task.createdAt.toDate() : task.createdAt,
+          updatedAt: task.updatedAt instanceof Timestamp ? task.updatedAt.toDate() : task.updatedAt,
+        }));
+
+        this.groupTasksByStatus();
+        this.cdr.detectChanges();
+        loading.dismiss();
+      },
+      error: (err) => {
+        console.error('Error al cargar tareas:', err);
+        loading.dismiss();
+        this.presentToast('Error al cargar tareas.', 'danger');
+      }
     });
   }
 
@@ -88,26 +149,30 @@ export class TodoListPage implements OnInit, OnDestroy {
       title: this.getTaskStatusTitle(status),
       tasks: this.tasks
         .filter(task => task.status === status)
-        .sort((a, b) => a.updatedAt.getTime() - b.updatedAt.getTime()), // Simple sorting
+        .sort((a, b) => {
+          const dateA = a.updatedAt instanceof Timestamp ? a.updatedAt.toDate().getTime() : a.updatedAt.getTime();
+          const dateB = b.updatedAt instanceof Timestamp ? b.updatedAt.toDate().getTime() : b.updatedAt.getTime();
+          return dateB - dateA; // Orden descendente (más recientes primero)
+        }),
     }));
   }
 
   getTaskStatusTitle(status: TaskStatus): string {
     switch (status) {
-      case TaskStatus.NEW: return 'Nueva';
-      case TaskStatus.SCHEDULED: return 'Programada';
-      case TaskStatus.IN_PROGRESS: return 'En Progreso';
-      case TaskStatus.COMPLETED: return 'Completada';
+      case TaskStatus.NEW: return 'New';
+      case TaskStatus.SCHEDULED: return 'Scheduled';
+      case TaskStatus.IN_PROGRESS: return 'In Progress';
+      case TaskStatus.COMPLETED: return 'Completed';
       default: return '';
     }
   }
 
   getCategoryName(categoryId: string | undefined): string {
-    return this.categories.find(c => c.id === categoryId)?.name || 'Sin Categoría';
+    return this.categories.find(c => c.id === categoryId)?.name || 'No Category';
   }
 
   getCategoryColor(categoryId: string | undefined): string {
-    return this.categories.find(c => c.id === categoryId)?.color || '#cccccc'; // Default grey
+    return this.categories.find(c => c.id === categoryId)?.color || '#cccccc';
   }
 
   async openCreateTaskModal(status: TaskStatus) {
@@ -118,9 +183,9 @@ export class TodoListPage implements OnInit, OnDestroy {
         categories: this.categories,
       },
     });
-    modal.onDidDismiss().then((result) => {
+    modal.onDidDismiss().then(async (result) => {
       if (result.data) {
-        this.loadTasks(); // Reload tasks after create
+        await this.addTask({ ...result.data, status: status });
       }
     });
     await modal.present();
@@ -134,9 +199,9 @@ export class TodoListPage implements OnInit, OnDestroy {
         categories: this.categories,
       },
     });
-    modal.onDidDismiss().then((result) => {
+    modal.onDidDismiss().then(async (result) => {
       if (result.data) {
-        this.loadTasks(); // Reload tasks after edit
+        await this.updateTask(result.data);
       }
     });
     await modal.present();
@@ -145,13 +210,10 @@ export class TodoListPage implements OnInit, OnDestroy {
   async openCreateCategoryModal() {
     const modal = await this.modalController.create({
       component: CategoryModalComponent,
-      componentProps: {
-        // No category for creation
-      },
     });
-    modal.onDidDismiss().then((result) => {
+    modal.onDidDismiss().then(async (result) => {
       if (result.data) {
-        this.loadCategories(); // Reload categories after create
+        await this.addCategory(result.data);
       }
     });
     await modal.present();
@@ -164,138 +226,204 @@ export class TodoListPage implements OnInit, OnDestroy {
         category: category,
       },
     });
-    modal.onDidDismiss().then((result) => {
+    modal.onDidDismiss().then(async (result) => {
       if (result.data) {
-        this.loadCategories(); // Reload categories after edit
-        this.loadTasks(); // Also reload tasks in case category name/color changed
+        await this.updateCategory(result.data);
       }
     });
     await modal.present();
   }
 
-  // --- Category Management ---
-
-  async openEditCategoryAlert(category: Category) {
-    const alert = await this.alertController.create({
-      header: 'Editar Categoría',
-      inputs: [
-        {
-          name: 'categoryName',
-          type: 'text',
-          placeholder: 'Nombre de la categoría',
-          value: category.name,
-        },
-      ],
-      buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel',
-          cssClass: 'secondary',
-        },
-        {
-          text: 'Guardar',
-          handler: (data) => {
-            if (data.categoryName && data.categoryName.trim() !== '') {
-              const updatedCategory: Category = {
-                ...category,
-                name: data.categoryName,
-              };
-              this.todoInteractor.editCategory(updatedCategory).pipe(take(1)).subscribe({
-                next: () => {
-                  this.presentToast('Categoría actualizada con éxito');
-                  this.loadCategories(); // Refresh categories
-                  this.loadTasks(); // Refresh tasks in case category name changed
-                  this.menuController.close('categoryMenu'); // Close menu after editing
-                },
-                error: (err) => {
-                  console.error('Error updating category', err);
-                  this.presentToast('Error al actualizar la categoría', 'danger');
-                },
-              });
-              return true; // Explicitly return true to close the alert after initiating async operation
-            } else {
-              this.presentToast('El nombre de la categoría no puede estar vacío', 'danger');
-              return false; // Prevent alert from closing if validation fails
-            }
-          },
-        },
-      ],
-    });
-
-    await alert.present();
+  async openCategoryMenu() {
+    await this.menuCtrl.open('categoryMenu');
   }
 
   async presentDeleteConfirm(categoryId: string) {
-    const alert = await this.alertController.create({
-      header: 'Confirmar Eliminación',
-      message: '¿Estás seguro de que quieres eliminar esta categoría? Las tareas asociadas no se eliminarán, pero quedarán sin categoría.',
-      buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel',
-          cssClass: 'secondary',
-        },
-        {
-          text: 'Eliminar',
-          handler: () => {
-            this.deleteCategory(categoryId);
-          },
-        },
-      ],
+    const alert = await this.alertCtrl.create({
+        header: 'Confirmar Eliminación',
+        message: '¿Estás seguro de que quieres eliminar esta categoría?',
+        buttons: [
+            {
+                text: 'Cancelar',
+                role: 'cancel'
+            },
+            {
+                text: 'Eliminar',
+                handler: async () => {
+                    const loading = await this.presentLoading('Eliminando categoría...');
+                    try {
+                        await this.categoryService.deleteCategory(categoryId);
+                        loading.dismiss();
+                        this.presentToast('Categoría eliminada correctamente.', 'success');
+                        this.loadCategories(); // Reload categories after deletion
+                    } catch (error) {
+                        console.error('Error al eliminar categoría:', error);
+                        loading.dismiss();
+                        this.presentToast('Error al eliminar categoría.', 'danger');
+                    }
+                }
+            }
+        ]
     });
-
     await alert.present();
   }
 
-  private deleteCategory(categoryId: string) {
-    this.todoInteractor.deleteCategory(categoryId).pipe(take(1)).subscribe({
-      next: () => {
-        // Update the local array to reflect the change immediately
-        this.categories = this.categories.filter(cat => cat.id !== categoryId);
-        this.presentToast('Categoría eliminada con éxito');
-        this.loadTasks(); // Refresh tasks as some may have lost their category
-        this.cdr.detectChanges(); // Manually trigger change detection
-        this.menuController.close('categoryMenu'); // Close menu after deletion
-      },
-      error: (err) => {
-        console.error('Error deleting category', err);
-        this.presentToast('Error al eliminar la categoría', 'danger');
+
+  // --- Operaciones con Firebase ---
+  async addTask(taskData: Partial<Task>) {
+    const loading = await this.presentLoading('Añadiendo tarea...');
+
+    try {
+      // Usar el servicio de tareas extendido o ajustar según tu implementación
+      await this.taskService.addTask(
+        taskData.title || '',
+        taskData.description,
+        taskData.categoryId,
+        taskData.status || TaskStatus.NEW
+      );
+
+      // Si necesitas guardar más propiedades, podrías necesitar extender tu servicio
+      // Para propiedades adicionales, podrías hacer un update después
+
+      loading.dismiss();
+      this.presentToast('Tarea añadida correctamente.', 'success');
+    } catch (error) {
+      console.error('Error al añadir tarea:', error);
+      loading.dismiss();
+      this.presentToast('Error al añadir tarea.', 'danger');
+    }
+  }
+
+  async updateTask(updatedTask: Task) {
+    const loading = await this.presentLoading('Actualizando tarea...');
+
+    try {
+      if (!updatedTask.id) {
+        throw new Error('La tarea no tiene ID.');
       }
-    });
+      // Solo actualizar propiedades básicas que soporta el servicio actual
+      const taskToUpdate = {
+        id: updatedTask.id,
+        title: updatedTask.title,
+        completed: updatedTask.completed,
+        status: updatedTask.status,
+        categoryId: updatedTask.categoryId || '',
+        description: updatedTask.description || '',
+        createdAt: updatedTask.createdAt,
+        updatedAt: updatedTask.updatedAt
+      };
+
+      await this.taskService.updateTask(taskToUpdate);
+      loading.dismiss();
+      this.presentToast('Tarea actualizada correctamente.', 'success');
+    } catch (error) {
+      console.error('Error al actualizar tarea:', error);
+      loading.dismiss();
+      this.presentToast('Error al actualizar tarea.', 'danger');
+    }
   }
 
-  private async presentToast(message: string, color: string = 'success') {
-    const toast = await this.toastController.create({
-      message,
-      duration: 2000,
-      color: color,
-    });
-    toast.present();
+  async addCategory(categoryData: Partial<Category>) {
+    const loading = await this.presentLoading('Añadiendo categoría...');
+
+    try {
+      await this.categoryService.addCategory(categoryData.name || '', categoryData.color || '');
+      loading.dismiss();
+      this.presentToast('Categoría añadida correctamente.', 'success');
+    } catch (error) {
+      console.error('Error al añadir categoría:', error);
+      loading.dismiss();
+      this.presentToast('Error al añadir categoría.', 'danger');
+    }
   }
 
-  // --- Menu control ---
-  openCategoryMenu() {
-    this.menuController.open('categoryMenu');
-  }
+  async updateCategory(updatedCategory: Category) {
+    const loading = await this.presentLoading('Actualizando categoría...');
 
+    try {
+      await this.categoryService.updateCategory(updatedCategory);
+      loading.dismiss();
+      this.presentToast('Categoría actualizada correctamente.', 'success');
+    } catch (error) {
+      console.error('Error al actualizar categoría:', error);
+      loading.dismiss();
+      this.presentToast('Error al actualizar categoría.', 'danger');
+    }
+  }
 
   // --- Task actions ---
-  onTaskDeleted(taskId: string) {
-    this.todoInteractor.deleteTask(taskId).subscribe(() => {
-      this.loadTasks();
+  async onTaskDeleted(taskId: string) {
+    const alert = await this.alertCtrl.create({
+      header: 'Confirmar Eliminación',
+      message: '¿Estás seguro de que quieres eliminar esta tarea?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel'
+        },
+        {
+          text: 'Eliminar',
+          handler: async () => {
+            const loading = await this.presentLoading('Eliminando tarea...');
+            try {
+              await this.taskService.deleteTask(taskId);
+              loading.dismiss();
+              this.presentToast('Tarea eliminada correctamente.', 'success');
+            } catch (error) {
+              console.error('Error al eliminar tarea:', error);
+              loading.dismiss();
+              this.presentToast('Error al eliminar tarea.', 'danger');
+            }
+          }
+        }
+      ]
     });
+    await alert.present();
   }
 
-  onTaskStatusChanged(event: { taskId: string; newStatus: TaskStatus }) {
-    this.todoInteractor.changeTaskStatus(event.taskId, event.newStatus).subscribe(() => {
-      this.loadTasks();
-    });
+  async onTaskStatusChanged(event: { taskId: string; newStatus: TaskStatus }) {
+    const loading = await this.presentLoading('Cambiando estado...');
+
+    try {
+      // Buscar la tarea actual
+      const task = this.tasks.find(t => t.id === event.taskId);
+      if (task) {
+        const updatedTask = {
+          ...task,
+          status: event.newStatus,
+          completed: event.newStatus === TaskStatus.COMPLETED
+        };
+        await this.updateTask(updatedTask);
+        loading.dismiss();
+        this.presentToast('Estado actualizado correctamente.', 'success');
+      }
+    } catch (error) {
+      console.error('Error al cambiar estado:', error);
+      loading.dismiss();
+      this.presentToast('Error al cambiar estado.', 'danger');
+    }
   }
 
-  onTaskMarkedCompleted(event: { taskId: string; completed: boolean }) {
-    this.todoInteractor.markTaskAsCompleted(event.taskId, event.completed).subscribe(() => {
-      this.loadTasks();
-    });
+  async onTaskMarkedCompleted(event: { taskId: string; completed: boolean }) {
+    const loading = await this.presentLoading('Actualizando tarea...');
+
+    try {
+      const task = this.tasks.find(t => t.id === event.taskId);
+      if (task) {
+        const updatedTask = {
+          ...task,
+          completed: event.completed,
+          status: event.completed ? TaskStatus.COMPLETED : TaskStatus.IN_PROGRESS
+        };
+        await this.updateTask(updatedTask);
+        loading.dismiss();
+        this.presentToast('Tarea actualizada correctamente.', 'success');
+      }
+    } catch (error) {
+      console.error('Error al actualizar tarea:', error);
+      loading.dismiss();
+      this.presentToast('Error al actualizar tarea.', 'danger');
+    }
   }
 
   // --- Filtering ---
@@ -304,36 +432,61 @@ export class TodoListPage implements OnInit, OnDestroy {
     this.filteredCategoryId = categoryId === 'all' ? null : categoryId;
 
     if (this.filteredCategoryId === null) {
-      this.loadTasks(); // Load all tasks
+      this.loadTasks();
     } else {
-      this.todoInteractor.filterTasksByCategory(this.filteredCategoryId).pipe(
-        takeUntil(this.destroy$)
-      ).subscribe(tasks => {
-        this.tasks = tasks;
-        this.groupTasksByStatus();
-        this.cdr.detectChanges();
-      });
+      // Filtrar localmente las tareas ya cargadas
+      this.filterTasksLocally(this.filteredCategoryId);
     }
   }
 
-  // --- Drag and Drop (conceptual) ---
-  // Ionic doesn't have native drag-and-drop for Kanban directly without third-party libs
-  // For simplicity, we'll assume status change through modals/select for now.
-  // If drag-and-drop is a hard requirement, a library like @angular/cdk/drag-drop would be integrated here.
+  private filterTasksLocally(categoryId: string) {
+    const filteredTasks = this.tasks.filter(task => task.categoryId === categoryId);
+    this.tasks = filteredTasks;
+    this.groupTasksByStatus();
+    this.cdr.detectChanges();
+  }
 
-  // Example of a task being dropped into a new column (conceptual, requires D&D library)
-  // onTaskDrop(event: CdkDragDrop<Task[]>, newStatus: TaskStatus) {
-  //   if (event.previousContainer === event.container) {
-  //     moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-  //   } else {
-  //     transferArrayItem(
-  //       event.previousContainer.data,
-  //       event.container.data,
-  //       event.previousIndex,
-  //       event.currentIndex,
-  //     );
-  //     const droppedTask = event.container.data[event.currentIndex];
-  //     this.onTaskStatusChanged({ taskId: droppedTask.id, newStatus: newStatus });
-  //   }
-  // }
+  clearFilter() {
+    this.filteredCategoryId = null;
+    this.loadTasks();
+  }
+
+  async logout() {
+    const loading = await this.presentLoading('Cerrando sesión...');
+    try {
+      await this.authService.logout();
+      loading.dismiss();
+      this.router.navigateByUrl('/login', { replaceUrl: true });
+      this.presentToast('Sesión cerrada correctamente.', 'success');
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error);
+      loading.dismiss();
+      this.presentToast('Error al cerrar sesión.', 'danger');
+    }
+  }
+
+  // --- Helpers ---
+  private async presentLoading(message: string) {
+    const loading = await this.loadingCtrl.create({
+      message: message,
+      spinner: 'crescent'
+    });
+    await loading.present();
+    return loading;
+  }
+
+  private async presentToast(message: string, color: string = 'primary') {
+    const toast = await this.toastCtrl.create({
+      message: message,
+      duration: 2000,
+      color: color,
+      position: 'bottom'
+    });
+    toast.present();
+  }
+
+  // Método para obtener conteo de tareas por categoría
+  getTaskCountByCategory(categoryId: string): number {
+    return this.tasks.filter(task => task.categoryId === categoryId).length;
+  }
 }
