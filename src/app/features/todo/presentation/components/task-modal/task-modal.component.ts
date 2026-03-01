@@ -63,7 +63,7 @@ export class TaskModalComponent implements OnInit {
         updatedAt: new Date(),
       };
       this.todoInteractor.editTask(updatedTask).pipe(take(1)).subscribe({
-        next: () => this.modalController.dismiss(true),
+        next: () => this.modalController.dismiss(updatedTask),
         error: (err) => console.error('Error updating task', err),
       });
     } else {
@@ -74,7 +74,7 @@ export class TaskModalComponent implements OnInit {
         categoryId: taskData.categoryId,
       };
       this.todoInteractor.createTask(newTask).pipe(take(1)).subscribe({
-        next: () => this.modalController.dismiss(true),
+        next: () => this.modalController.dismiss(newTask),
         error: (err) => console.error('Error creating task', err),
       });
     }

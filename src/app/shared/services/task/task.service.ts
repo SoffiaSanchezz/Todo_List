@@ -63,7 +63,9 @@ export class TaskService {
         if (currentUser && currentUser.uid) {
           const q = query(this.tasksCollection, where('userId', '==', currentUser.uid));
           return collectionData(q, { idField: 'id' }).pipe(
-            map(tasks => tasks.map(this.convertTimestampsToDates))
+            map(tasks => { 
+              return tasks.map(this.convertTimestampsToDates); 
+            })
           );
         } else {
           return of([]);
