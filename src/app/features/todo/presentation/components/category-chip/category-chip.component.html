@@ -1,0 +1,12 @@
+<!-- Chip de categoría -->
+<!-- Se muestra solo si existe la categoría -->
+<ion-chip *ngIf="category" [style.--ion-background-color]="category.color" [style.--ion-color]="'#FFFFFF'">
+
+  <!-- Nombre de la categoría -->
+  <ion-label>{{ category.name }}</ion-label>
+
+  <!-- Icono para editar la categoría -->
+  <ion-icon name="create-outline" (click)="onEditCategory()">
+  </ion-icon>
+
+</ion-chip>

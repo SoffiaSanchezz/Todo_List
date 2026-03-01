@@ -1,0 +1,37 @@
+<div class="card" [class.task-completed]="task.completed">
+  <div class="img">
+    <ion-checkbox
+      [checked]="task.completed"
+      (ionChange)="onToggleCompleted()"
+      (click)="stopEventPropagation($event)"
+      [color]="task.completed ? 'success' : 'medium'"
+    ></ion-checkbox>
+  </div>
+  <div class="textBox">
+    <div class="textContent">
+      <p class="h1">{{ task.title }}</p>
+      <span class="span">{{ task.updatedAt | date:'shortTime' }}</span>
+    </div>
+    <p class="p">{{ task.description }}</p>
+    <app-category-chip [category]="getCategoryForTask()"></app-category-chip>
+  </div>
+  <ion-buttons slot="end" (click)="stopEventPropagation($event)">
+    <ion-button (click)="onEditClick()">
+      <ion-icon name="create-outline"></ion-icon>
+    </ion-button>
+    <ion-button (click)="onDeleteClick()" color="danger">
+      <ion-icon name="trash-outline"></ion-icon>
+    </ion-button>
+  </ion-buttons>
+</div>
+
+<ion-item class="status-selector" (click)="stopEventPropagation($event)">
+  <ion-label>Status:</ion-label>
+  <ion-select
+    interface="popover"
+    [value]="currentTaskStatus"
+    (ionChange)="onStatusChange($event)"
+  >
+    <ion-select-option *ngFor="let status of taskStatuses" [value]="status">{{ status | titlecase }}</ion-select-option>
+  </ion-select>
+</ion-item>

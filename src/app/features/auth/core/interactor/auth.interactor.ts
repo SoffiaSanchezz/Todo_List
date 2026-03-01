@@ -1,5 +1,5 @@
 import { Injectable, inject } from "@angular/core";
-import { LoginUseCase, RegisterUseCase } from "../usecases";
+import { LoginUseCase } from "../usecases";
 import { AuthRepository } from "../repositories/auth.repository";
 import { LoginResponseEntity } from "../entities/login-response.entity";
 import { LoginRequestEntity } from "../entities/login-information.entity";
@@ -14,12 +14,10 @@ import { Observable } from "rxjs";
 @Injectable()
 export class AuthInteractor {
     private loginUseCase: LoginUseCase;
-    private registerUseCase: RegisterUseCase;
     private authRepository = inject(AuthRepository);
 
     constructor() {
         this.loginUseCase = new LoginUseCase(this.authRepository);
-        this.registerUseCase = new RegisterUseCase(this.authRepository);
     }
 
     /**
@@ -27,12 +25,5 @@ export class AuthInteractor {
      */
     public authenticateUser(params: LoginRequestEntity): Observable<LoginResponseEntity> {
         return this.loginUseCase.execute(params);
-    }
-
-    /**
-     * Ejecuta el caso de uso de registro de usuario.
-     */
-    public registerUser(params: RequestRegisterEntity): Observable<RegisterResponseEntity> {
-        return this.registerUseCase.execute(params);
     }
 }

@@ -9,6 +9,7 @@ export const routes: Routes = [
         pathMatch: 'full'
     },
     { path: 'auth', loadChildren: () => import('../features/auth/presentation/auth.modules').then(m => m.AuthModule) },
+    { path: 'todo', loadChildren: () => import('../features/todo/todo.module').then(m => m.TodoModule) },
     {
         path: '**',
         component: PageNotFoundComponent

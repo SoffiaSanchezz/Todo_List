@@ -1,0 +1,246 @@
+.kanban-board {
+  display: flex;
+  overflow-x: auto;
+  height: 100%;
+  padding: 20px 16px;
+  gap: 20px; // Increased gap between columns for better separation
+  background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+
+  // Custom scrollbar
+  &::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--ion-color-primary);
+    border-radius: 4px;
+    transition: background 0.3s ease;
+
+    &:hover {
+      background: var(--ion-color-primary-shade);
+    }
+  }
+
+  .kanban-column {
+    flex: 0 0 340px; // Slightly wider columns for better content display
+    display: flex;
+    flex-direction: column;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
+
+    .column-header {
+      flex-shrink: 0;
+      margin: 0;
+      padding: 20px 16px 16px;
+      background: linear-gradient(135deg, rgba(var(--ion-color-primary-rgb, 56, 128, 255), 0.08) 0%, rgba(var(--ion-color-primary-rgb, 56, 128, 255), 0.02) 100%);
+      border-radius: 16px 16px 0 0;
+      box-shadow: none;
+    }
+
+    ion-card-header {
+      padding: 0 0 12px 0;
+      border-bottom: 2px solid rgba(var(--ion-color-primary-rgb, 56, 128, 255), 0.1);
+      text-align: center; // Center the column header content
+    }
+
+    ion-card-title {
+      font-weight: 800;
+      font-size: 1.2rem;
+      color: var(--ion-color-primary);
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    ion-card-subtitle {
+      color: var(--ion-color-medium);
+      font-weight: 600;
+      font-size: 0.85rem;
+      background: var(--ion-color-light);
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 12px;
+    }
+
+    .add-task-btn {
+      --padding-start: 12px;
+      --padding-end: 12px;
+      --border-radius: 10px;
+      margin-top: 12px;
+      margin-bottom: 0;
+      color: var(--ion-color-medium); // More subtle color
+      font-weight: 600;
+      font-size: 0.85rem; // Smaller text
+      transition: all 0.3s ease;
+      opacity: 0.8; // Slightly transparent for discretion
+
+      &:hover {
+        --background: rgba(var(--ion-color-success-rgb, 16, 220, 96), 0.1);
+        transform: scale(1.02);
+        opacity: 1;
+        color: var(--ion-color-success);
+      }
+
+      .small-icon {
+        font-size: 1rem; // Reduced from 1.2rem
+        margin-right: 4px;
+      }
+    }
+
+    .task-list {
+      flex-grow: 1;
+      overflow-y: auto;
+      padding: 20px 16px; // Increased padding for better spacing
+      display: flex;
+      flex-direction: column;
+      gap: 16px; // Increased gap between tasks for less cramped look
+      align-items: center; // Center tasks horizontally
+
+      app-task-card {
+        width: 100%;
+        max-width: 100%;
+      }
+
+      // Custom scrollbar
+      &::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: var(--ion-color-medium-tint);
+        border-radius: 3px;
+
+        &:hover {
+          background: var(--ion-color-medium);
+        }
+      }
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 600px) {
+  .kanban-board {
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+    padding: 16px 12px;
+
+    .kanban-column {
+      flex: 0 0 auto;
+      width: 100%;
+      max-width: 500px;
+      margin-bottom: 16px;
+    }
+  }
+}
+
+// Header improvements
+ion-header {
+  ion-toolbar {
+    --background: linear-gradient(135deg, var(--ion-color-primary) 0%, var(--ion-color-primary-shade) 100%);
+    --color: var(--ion-color-primary-contrast);
+    --border-width: 0;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+    ion-title {
+      font-weight: 800;
+      font-size: 1.3rem;
+      letter-spacing: 0.5px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    ion-button {
+      --border-radius: 10px;
+      --padding-start: 12px;
+      --padding-end: 12px;
+      transition: all 0.2s ease;
+
+      &:hover {
+        --background: rgba(255, 255, 255, 0.15);
+        transform: scale(1.1);
+      }
+
+      &:active {
+        transform: scale(0.95);
+      }
+
+      ion-icon {
+        font-size: 1.6rem;
+      }
+    }
+  }
+}
+
+ion-segment {
+  background: #ffffff;
+  --background: #ffffff;
+  padding: 12px;
+  border-radius: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+  ion-segment-button {
+    --color: var(--ion-color-medium);
+    --color-checked: #ffffff;
+    --indicator-color: var(--ion-color-primary);
+    --indicator-height: 100%;
+    --border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    letter-spacing: 0.3px;
+    transition: all 0.3s ease;
+    margin: 0 4px;
+
+    &:hover {
+      --color: var(--ion-color-primary);
+    }
+
+    &::part(indicator-background) {
+      background: linear-gradient(135deg, var(--ion-color-primary) 0%, var(--ion-color-primary-shade) 100%);
+      box-shadow: 0 2px 8px rgba(var(--ion-color-primary-rgb, 56, 128, 255), 0.3);
+    }
+  }
+}
+
+// Smooth transitions for content
+ion-content {
+  --background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+}
+
+// Loading and empty states
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  color: var(--ion-color-medium);
+  font-size: 0.95rem;
+  text-align: center;
+
+  ion-icon {
+    font-size: 4rem;
+    margin-bottom: 16px;
+    opacity: 0.5;
+  }
+}

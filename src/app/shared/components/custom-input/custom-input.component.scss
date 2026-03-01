@@ -1,0 +1,34 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+
+ion-item {
+  --padding-start: 0;
+  --inner-padding-end: 0;
+  --inner-border-width: 0;
+  --highlight-background: transparent;
+  font-family: 'Quicksand', sans-serif; // Aplicar fuente Quicksand
+}
+
+ion-input {
+  --padding-start: 0;
+  --padding-end: 0;
+  font-family: 'Quicksand', sans-serif; // Aplicar fuente Quicksand
+}
+
+ion-label {
+  font-family: 'Quicksand', sans-serif; // Aplicar fuente Quicksand
+}
+
+ion-note {
+  display: block;
+  padding-left: 16px;
+  margin-top: 2px;
+  font-family: 'Quicksand', sans-serif; // Aplicar fuente Quicksand
+
+  p {
+    margin-top: 2px;
+    margin-bottom: 2px;
+    font-size: 0.75em;
+    color: var(--ion-color-danger, #eb445a);
+    font-family: 'Quicksand', sans-serif; // Aplicar fuente Quicksand
+  }
+}
