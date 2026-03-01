@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-page-not-found',
@@ -12,8 +13,12 @@ import { IonicModule } from '@ionic/angular';
     IonicModule
   ]
 })
-export class PageNotFoundComponent {
+export class PageNotFoundComponent { // Removed implements OnInit
 
-  constructor() { }
+  constructor(private router: Router) { }
 
+  // Method to navigate to login page
+  goToLogin() {
+    this.router.navigateByUrl('/auth/login');
+  }
 }
