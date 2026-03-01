@@ -173,7 +173,58 @@ export class TodoListPage implements OnInit, OnDestroy {
     await modal.present();
   }
 
-  // --- Category Deletion ---
+  // --- Category Management ---
+
+  async openEditCategoryAlert(category: Category) {
+    const alert = await this.alertController.create({
+      header: 'Editar Categoría',
+      inputs: [
+        {
+          name: 'categoryName',
+          type: 'text',
+          placeholder: 'Nombre de la categoría',
+          value: category.name,
+        },
+      ],
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'secondary',
+        },
+        {
+          text: 'Guardar',
+          handler: (data) => {
+            if (data.categoryName && data.categoryName.trim() !== '') {
+              const updatedCategory: Category = {
+                ...category,
+                name: data.categoryName,
+              };
+              this.todoInteractor.editCategory(updatedCategory).pipe(take(1)).subscribe({
+                next: () => {
+                  this.presentToast('Categoría actualizada con éxito');
+                  this.loadCategories(); // Refresh categories
+                  this.loadTasks(); // Refresh tasks in case category name changed
+                  this.menuController.close('categoryMenu'); // Close menu after editing
+                },
+                error: (err) => {
+                  console.error('Error updating category', err);
+                  this.presentToast('Error al actualizar la categoría', 'danger');
+                },
+              });
+              return true; // Explicitly return true to close the alert after initiating async operation
+            } else {
+              this.presentToast('El nombre de la categoría no puede estar vacío', 'danger');
+              return false; // Prevent alert from closing if validation fails
+            }
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+  }
+
   async presentDeleteConfirm(categoryId: string) {
     const alert = await this.alertController.create({
       header: 'Confirmar Eliminación',
@@ -204,6 +255,7 @@ export class TodoListPage implements OnInit, OnDestroy {
         this.presentToast('Categoría eliminada con éxito');
         this.loadTasks(); // Refresh tasks as some may have lost their category
         this.cdr.detectChanges(); // Manually trigger change detection
+        this.menuController.close('categoryMenu'); // Close menu after deletion
       },
       error: (err) => {
         console.error('Error deleting category', err);

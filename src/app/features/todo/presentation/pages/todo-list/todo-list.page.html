@@ -12,9 +12,14 @@
       <ion-item *ngFor="let category of categories">
         <div class="category-color-dot" [style.backgroundColor]="category.color"></div>
         <ion-label>{{ category.name }}</ion-label>
-        <ion-button fill="clear" (click)="presentDeleteConfirm(category.id)" slot="end" color="danger">
-          <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
-        </ion-button>
+        <ion-buttons slot="end">
+          <ion-button fill="clear" (click)="openEditCategoryAlert(category)">
+            <ion-icon slot="icon-only" name="pencil-outline"></ion-icon>
+          </ion-button>
+          <ion-button fill="clear" (click)="presentDeleteConfirm(category.id)" color="danger">
+            <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+          </ion-button>
+        </ion-buttons>
       </ion-item>
     </ion-list>
     <ng-template #noCategoriesMessage>
