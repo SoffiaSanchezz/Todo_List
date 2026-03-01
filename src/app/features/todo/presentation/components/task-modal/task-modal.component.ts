@@ -67,7 +67,7 @@ export class TaskModalComponent implements OnInit {
         error: (err) => console.error('Error updating task', err),
       });
     } else {
-      const newTask: Omit<Task, 'id' | 'createdAt' | 'updatedAt' | 'completed'> = {
+      const newTask: Omit<Task, 'id' | 'createdAt' | 'updatedAt' | 'completed' | 'userId'> = {
         title: taskData.title,
         description: taskData.description,
         status: taskData.status,

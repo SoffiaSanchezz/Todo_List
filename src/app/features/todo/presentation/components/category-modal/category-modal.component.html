@@ -11,7 +11,7 @@
 
     <!-- Título dinámico según el modo -->
     <ion-title>
-      {{ isEditMode ? 'Edit Category' : 'Create Category' }}
+      {{ isEditMode ? 'Editar Categoría' : 'Crear Categoría' }}
     </ion-title>
 
     <!-- Botón para guardar -->
@@ -32,8 +32,8 @@
 
     <!-- Campo nombre de la categoría -->
     <ion-item>
-      <ion-input label="Category Name" labelPlacement="floating" formControlName="name"
-        placeholder="Enter category name">
+      <ion-input label="Nombre de la Categoría" labelPlacement="floating" formControlName="name"
+        placeholder="Introduce el nombre de la categoría">
       </ion-input>
     </ion-item>
 
@@ -47,7 +47,7 @@
 
   <!-- Botón para eliminar (solo en modo edición) -->
   <ion-button *ngIf="isEditMode" expand="block" color="danger" class="ion-margin-top" (click)="onDelete()">
-    Delete Category
+    Eliminar Categoría
   </ion-button>
 
 </ion-content>
