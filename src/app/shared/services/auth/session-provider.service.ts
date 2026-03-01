@@ -1,20 +1,29 @@
 import { Injectable, inject } from '@angular/core';
-import { Auth, signInWithEmailAndPassword, signOut, User, GoogleAuthProvider, signInWithPopup } from '@angular/fire/auth';
+import {
+  Auth,
+  signInWithEmailAndPassword,
+  signOut,
+  User,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signInWithCredential,
+  onAuthStateChanged
+} from '@angular/fire/auth';
 import { Observable } from 'rxjs';
-
+import { Platform } from '@ionic/angular';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SessionProviderservice {
 
-  private auth: Auth;
+  private auth = inject(Auth);
+  private platform = inject(Platform);
   currentUser: Observable<User | null>;
 
   constructor() {
-    this.auth = inject(Auth);
     this.currentUser = new Observable<User | null>(observer => {
-      const unsubscribe = this.auth.onAuthStateChanged(user => {
+      const unsubscribe = onAuthStateChanged(this.auth, user => {
         observer.next(user);
       });
       return { unsubscribe };
@@ -23,8 +32,7 @@ export class SessionProviderservice {
 
   async login(email: string, password: string): Promise<any> {
     try {
-      const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
-      return userCredential;
+      return await signInWithEmailAndPassword(this.auth, email, password);
     } catch (error) {
       console.error("Error al iniciar sesión: ", error);
       throw error;
@@ -33,9 +41,20 @@ export class SessionProviderservice {
 
   async signInWithGoogle(): Promise<any> {
     try {
-      const provider = new GoogleAuthProvider();
-      const userCredential = await signInWithPopup(this.auth, provider);
-      return userCredential;
+      if (this.platform.is('cordova') || this.platform.is('capacitor')) {
+        // --- LOGICA NATIVA PARA APK ---
+        // @ts-ignore
+        const res = await window.plugins.googleplus.login({
+          'webClientId': '613562000814-9phqq8sfuulsobjuht2297784mqhrh11.apps.googleusercontent.com',
+          'offline': false
+        });
+        const credential = GoogleAuthProvider.credential(res.idToken);
+        return await signInWithCredential(this.auth, credential);
+      } else {
+        // --- LOGICA WEB PARA DESARROLLO ---
+        const provider = new GoogleAuthProvider();
+        return await signInWithPopup(this.auth, provider);
+      }
     } catch (error) {
       console.error("Error al iniciar sesión con Google: ", error);
       throw error;
