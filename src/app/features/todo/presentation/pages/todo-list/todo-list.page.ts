@@ -8,7 +8,7 @@ import {
   LoadingController,
   AlertController,
   ToastController,
-  MenuController
+  MenuController // Add MenuController
 } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { TaskCardComponent } from '../../components/task-card/task-card.component';
@@ -19,11 +19,10 @@ import { SessionProviderservice } from '@shared/services/auth/session-provider.s
 import { TaskService } from '@shared/services/task/task.service';
 import { CategoryService } from '@shared/services/category/category.service';
 import { Task, TaskStatus } from '../../../domain/entities/task.entity';
-import { Category } from '../../../domain/entities/category.entity';
+import { Category } from '../../../domain/entities/category.entity'; // This line should be already correct
 import { CommonModule } from '@angular/common';
 
 // Definir los TaskStatus si no están en tu interfaz de Task
-// Extender la interfaz Task del servicio para incluir propiedades adicionales
 interface KanbanColumn {
   status: TaskStatus;
   title: string;
@@ -211,10 +210,9 @@ export class TodoListPage implements OnInit, OnDestroy {
     const modal = await this.modalController.create({
       component: CategoryModalComponent,
     });
-    modal.onDidDismiss().then(async (result) => {
-      if (result.data) {
-        await this.addCategory(result.data);
-      }
+    modal.onDidDismiss().then(() => {
+      // La categoría ya se guardó en el modal, solo recargamos la lista
+      this.loadCategories();
     });
     await modal.present();
   }
@@ -226,10 +224,9 @@ export class TodoListPage implements OnInit, OnDestroy {
         category: category,
       },
     });
-    modal.onDidDismiss().then(async (result) => {
-      if (result.data) {
-        await this.updateCategory(result.data);
-      }
+    modal.onDidDismiss().then(() => {
+      // La categoría ya se actualizó en el modal, solo recargamos la lista
+      this.loadCategories();
     });
     await modal.present();
   }
@@ -267,7 +264,6 @@ export class TodoListPage implements OnInit, OnDestroy {
     });
     await alert.present();
   }
-
 
   // --- Operaciones con Firebase ---
   async addTask(taskData: Partial<Task>) {
@@ -320,34 +316,6 @@ export class TodoListPage implements OnInit, OnDestroy {
       console.error('Error al actualizar tarea:', error);
       loading.dismiss();
       this.presentToast('Error al actualizar tarea.', 'danger');
-    }
-  }
-
-  async addCategory(categoryData: Partial<Category>) {
-    const loading = await this.presentLoading('Añadiendo categoría...');
-
-    try {
-      await this.categoryService.addCategory(categoryData.name || '', categoryData.color || '');
-      loading.dismiss();
-      this.presentToast('Categoría añadida correctamente.', 'success');
-    } catch (error) {
-      console.error('Error al añadir categoría:', error);
-      loading.dismiss();
-      this.presentToast('Error al añadir categoría.', 'danger');
-    }
-  }
-
-  async updateCategory(updatedCategory: Category) {
-    const loading = await this.presentLoading('Actualizando categoría...');
-
-    try {
-      await this.categoryService.updateCategory(updatedCategory);
-      loading.dismiss();
-      this.presentToast('Categoría actualizada correctamente.', 'success');
-    } catch (error) {
-      console.error('Error al actualizar categoría:', error);
-      loading.dismiss();
-      this.presentToast('Error al actualizar categoría.', 'danger');
     }
   }
 
