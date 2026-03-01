@@ -9,7 +9,9 @@
       <span class="span">{{ task.updatedAt | date:'shortTime' }}</span>
     </div>
     <p class="p">{{ task.description }}</p>
-    <app-category-chip [category]="getCategoryForTask()"></app-category-chip>
+    <!-- AQUÍ SE AGREGA EL MANEJADOR DEL EVENTO editCategory -->
+    <app-category-chip [category]="getCategoryForTask()" (editCategory)="onEditCategoryClick()">
+    </app-category-chip>
   </div>
   <ion-buttons slot="end" (click)="stopEventPropagation($event)">
     <ion-button (click)="onEditClick()">

@@ -21,8 +21,10 @@ export class TaskCardComponent implements OnInit {
   @Output() deleteTask = new EventEmitter<string>();
   @Output() changeStatus = new EventEmitter<{ taskId: string; newStatus: TaskStatus }>();
   @Output() markCompleted = new EventEmitter<{ taskId: string; completed: boolean }>();
+  // NUEVO EVENTO PARA EDITAR CATEGORÍA
+  @Output() editCategory = new EventEmitter<Category>();
 
-  currentTaskStatus: TaskStatus;
+  currentTaskStatus: string = TaskStatus.NEW;
   taskStatuses = Object.values(TaskStatus);
 
   constructor(private popoverController: PopoverController) {
@@ -43,6 +45,14 @@ export class TaskCardComponent implements OnInit {
 
   onDeleteClick() {
     this.deleteTask.emit(this.task.id);
+  }
+
+  // NUEVO MÉTODO PARA MANEJAR LA EDICIÓN DE CATEGORÍA
+  onEditCategoryClick() {
+    const category = this.getCategoryForTask();
+    if (category) {
+      this.editCategory.emit(category);
+    }
   }
 
   onStatusChange(event: any) {
