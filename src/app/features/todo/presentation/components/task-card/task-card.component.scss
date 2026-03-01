@@ -1,0 +1,94 @@
+/* From Uiverse.io by JohnnyCSilva */
+.card {
+  width: 100%;
+  max-width: 100%; /* Adjusted to fit kanban column */
+  height: 70px;
+  background: #353535;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  backdrop-filter: blur(10px);
+  transition: 0.5s ease-in-out;
+  position: relative; /* Added for positioning of buttons */
+}
+
+.card:hover {
+  cursor: pointer;
+  transform: scale(1.05);
+}
+
+.img {
+  width: 50px;
+  height: 50px;
+  margin-left: 10px;
+  border-radius: 10px;
+  background: linear-gradient(#d7cfcf, #9198e5);
+  display: flex; /* Added to center checkbox */
+  align-items: center; /* Added to center checkbox */
+  justify-content: center; /* Added to center checkbox */
+}
+
+.img ion-checkbox {
+  --background: transparent;
+  --border-color: #fff;
+  --checkmark-color: #fff;
+}
+
+.card:hover > .img {
+  transition: 0.5s ease-in-out;
+  background: linear-gradient(#9198e5, #712020);
+}
+
+.textBox {
+  width: calc(100% - 90px); /* Original width, might need adjustment */
+  margin-left: 10px;
+  color: white;
+  flex-grow: 1; /* Allows textBox to take available space */
+}
+
+.textContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.span {
+  font-size: 10px;
+}
+
+.h1 {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.p {
+  font-size: 12px;
+  font-weight: lighter;
+}
+
+.card ion-buttons {
+  position: absolute;
+  right: 5px; /* Adjust as needed */
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column; /* Stack buttons vertically */
+  gap: 2px; /* Space between buttons */
+  margin-right: 5px; /* Adjust as needed */
+}
+
+.card ion-buttons ion-button {
+  --background: transparent;
+  --color: white;
+  --padding-start: 5px;
+  --padding-end: 5px;
+  height: 25px; /* Adjust size */
+  width: 25px; /* Adjust size */
+  font-size: 0.8em;
+}
+
+.card.task-completed {
+  background: linear-gradient(135deg, rgba(var(--ion-color-success-rgb, 16, 220, 96), 0.03) 0%, rgba(var(--ion-color-success-rgb, 16, 220, 96), 0.01) 100%);
+  opacity: 0.9;
+}
