@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, from, forkJoin } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { Category } from '../../domain/entities/category.entity';
 import { CategoryRepository } from '../../domain/repositories/category.repository';
 import { LocalStorageDatasource } from '../datasources/local-storage.datasource';
+import { CategoryService } from '@shared/services/category/category.service';
 
 const CATEGORY_COLLECTION = 'categories';
 
@@ -10,12 +12,16 @@ const CATEGORY_COLLECTION = 'categories';
   providedIn: 'root', // This makes it a singleton and available throughout the app
 })
 export class CategoryImplementationRepository extends CategoryRepository {
-  constructor(private localStorageDatasource: LocalStorageDatasource) {
+  constructor(
+    private localStorageDatasource: LocalStorageDatasource,
+    private categoryService: CategoryService
+  ) {
     super();
   }
 
   getAllCategories(): Observable<Category[]> {
-    return this.localStorageDatasource.getAll<Category>(CATEGORY_COLLECTION);
+    // Obtener de localStorage (para offline) y de Firebase (para sincronización)
+    return this.categoryService.getAllCategories();
   }
 
   getCategoryById(id: string): Observable<Category | undefined> {
@@ -28,15 +34,38 @@ export class CategoryImplementationRepository extends CategoryRepository {
       ...category,
       color: category.color || this.generateRandomColor()
     } as Category;
-    return this.localStorageDatasource.create<Category>(CATEGORY_COLLECTION, newCategory);
+
+    // Guardar en localStorage primero (para offline)
+    return this.localStorageDatasource.create<Category>(CATEGORY_COLLECTION, newCategory).pipe(
+      switchMap((localCategory) => {
+        // Luego guardar en Firebase
+        return from(this.categoryService.addCategory(localCategory.name, localCategory.color)).pipe(
+          map(() => localCategory)
+        );
+      })
+    );
   }
 
   updateCategory(category: Category): Observable<Category> {
-    return this.localStorageDatasource.update<Category>(CATEGORY_COLLECTION, category);
+    // Actualizar en localStorage
+    return this.localStorageDatasource.update<Category>(CATEGORY_COLLECTION, category).pipe(
+      switchMap((localCategory) => {
+        // Luego actualizar en Firebase
+        return from(this.categoryService.updateCategory(category)).pipe(
+          map(() => localCategory)
+        );
+      })
+    );
   }
 
   deleteCategory(id: string): Observable<void> {
-    return this.localStorageDatasource.delete(CATEGORY_COLLECTION, id);
+    // Eliminar de localStorage
+    return this.localStorageDatasource.delete(CATEGORY_COLLECTION, id).pipe(
+      switchMap(() => {
+        // Luego eliminar de Firebase
+        return from(this.categoryService.deleteCategory(id));
+      })
+    );
   }
 
   private generateRandomColor(): string {
