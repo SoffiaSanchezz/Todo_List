@@ -1,30 +1,52 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { Auth, signInWithEmailAndPassword, signOut, User, GoogleAuthProvider, signInWithPopup } from '@angular/fire/auth';
+import { Observable } from 'rxjs';
 
-/**
- * Servicio encargado de gestionar la información de sesión
- * del usuario autenticado.
- */
+
 @Injectable({
   providedIn: 'root'
 })
 export class SessionProviderservice {
 
-  /**
-   * Token de autenticación del usuario.
-   */
-  public informationToken: string = '';
+  private auth: Auth;
+  currentUser: Observable<User | null>;
 
-  /**
-   * Retorna el token de sesión actual.
-   */
-  public getInformationToken(): string {
-    return this.informationToken;
+  constructor() {
+    this.auth = inject(Auth);
+    this.currentUser = new Observable<User | null>(observer => {
+      const unsubscribe = this.auth.onAuthStateChanged(user => {
+        observer.next(user);
+      });
+      return { unsubscribe };
+    });
   }
 
-  /**
-   * Almacena el token de sesión.
-   */
-  public setInformationToken(token: string): string {
-    return this.informationToken = token;
+  async login(email: string, password: string): Promise<any> {
+    try {
+      const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
+      return userCredential;
+    } catch (error) {
+      console.error("Error al iniciar sesión: ", error);
+      throw error;
+    }
+  }
+
+  async signInWithGoogle(): Promise<any> {
+    try {
+      const provider = new GoogleAuthProvider();
+      const userCredential = await signInWithPopup(this.auth, provider);
+      return userCredential;
+    } catch (error) {
+      console.error("Error al iniciar sesión con Google: ", error);
+      throw error;
+    }
+  }
+
+  async logout(): Promise<void> {
+    return signOut(this.auth);
+  }
+
+  getCurrentUser(): Observable<User | null> {
+    return this.currentUser;
   }
 }
