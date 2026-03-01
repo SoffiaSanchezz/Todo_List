@@ -77,8 +77,7 @@
       "cordova-plugin-ionic-webview": {},
       "cordova-plugin-ionic-keyboard": {},
       "cordova-plugin-googleplus": {
-        "REVERSED_CLIENT_ID": "com.googleusercontent.apps.613562000814-9phqq8sfuulsobjuht2297784mqhrh11",
-        "PLAY_SERVICES_VERSION": "15.0.1"
+        "REVERSED_CLIENT_ID": "com.googleusercontent.apps.613562000814-9phqq8sfuulsobjuht2297784mqhrh11"
       }
     },
     "platforms": [

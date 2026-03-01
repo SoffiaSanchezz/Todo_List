@@ -34,7 +34,6 @@ export class SessionProviderservice {
     try {
       return await signInWithEmailAndPassword(this.auth, email, password);
     } catch (error) {
-      console.error("Error al iniciar sesión: ", error);
       throw error;
     }
   }
@@ -42,21 +41,39 @@ export class SessionProviderservice {
   async signInWithGoogle(): Promise<any> {
     try {
       if (this.platform.is('cordova') || this.platform.is('capacitor')) {
-        // --- LOGICA NATIVA PARA APK ---
-        // @ts-ignore
-        const res = await window.plugins.googleplus.login({
-          'webClientId': '613562000814-9phqq8sfuulsobjuht2297784mqhrh11.apps.googleusercontent.com',
-          'offline': false
+        // --- LOGICA NATIVA CORREGIDA ---
+        return new Promise((resolve, reject) => {
+          // @ts-ignore
+          if (!window.plugins || !window.plugins.googleplus) {
+            return reject({ code: 'plugin_not_found', message: 'Plugin GooglePlus no instalado correctamente' });
+          }
+
+          // @ts-ignore
+          window.plugins.googleplus.login(
+            {
+              'webClientId': '613562000814-9phqq8sfuulsobjuht2297784mqhrh11.apps.googleusercontent.com',
+              'offline': false
+            },
+            async (res: any) => {
+              try {
+                const credential = GoogleAuthProvider.credential(res.idToken);
+                const userCredential = await signInWithCredential(this.auth, credential);
+                resolve(userCredential);
+              } catch (firebaseErr) {
+                reject(firebaseErr);
+              }
+            },
+            (err: any) => {
+              reject({ code: 'google_plugin_error', message: err });
+            }
+          );
         });
-        const credential = GoogleAuthProvider.credential(res.idToken);
-        return await signInWithCredential(this.auth, credential);
       } else {
-        // --- LOGICA WEB PARA DESARROLLO ---
+        // --- LOGICA WEB ---
         const provider = new GoogleAuthProvider();
         return await signInWithPopup(this.auth, provider);
       }
     } catch (error) {
-      console.error("Error al iniciar sesión con Google: ", error);
       throw error;
     }
   }
