@@ -7,13 +7,14 @@ import { Router } from '@angular/router';
 import { ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { SessionProviderservice } from 'src/app/shared/services/auth/session-provider.service';
+import { HeaderComponent } from 'src/app/shared/components/header/header.component';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, IonicModule]
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, IonicModule, HeaderComponent]
 })
 export class LoginPage implements OnInit {
   email = '';
@@ -77,7 +78,7 @@ export class LoginPage implements OnInit {
     try {
       const userCredential = await this.SessionProviderservice.signInWithGoogle();
       console.log('Inicio de sesión exitoso con Google:', userCredential.user);
-      this.router.navigateByUrl('/home');
+      this.router.navigateByUrl('/todo');
     } catch (error: any) {
       console.error('Error al iniciar sesión con Google:', error);
       this.handleAuthError(error);
