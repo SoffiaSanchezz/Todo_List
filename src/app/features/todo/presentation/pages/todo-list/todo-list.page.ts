@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 import { TaskCardComponent } from '../../components/task-card/task-card.component';
 import { TaskModalComponent } from '../../components/task-modal/task-modal.component';
 import { CategoryModalComponent } from '../../components/category-modal/category-modal.component';
+import { CategoryListModalComponent } from '../../components/category-list-modal/category-list-modal.component';
 import { Subject, Subscription, takeUntil } from 'rxjs';
 import { SessionProviderservice } from '@shared/services/auth/session-provider.service';
 import { TaskService } from '@shared/services/task/task.service';
@@ -232,7 +233,17 @@ export class TodoListPage implements OnInit, OnDestroy {
   }
 
   async openCategoryMenu() {
-    await this.menuCtrl.open('categoryMenu');
+    const modal = await this.modalController.create({
+      component: CategoryListModalComponent,
+    });
+    
+    await modal.present();
+    
+    const { data } = await modal.onDidDismiss();
+    if (data) {
+      this.loadCategories();
+      this.loadTasks(); // Por si se eliminó una categoría vinculada a tareas
+    }
   }
 
   async presentDeleteConfirm(categoryId: string) {

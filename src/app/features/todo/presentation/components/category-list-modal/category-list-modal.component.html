@@ -1,0 +1,43 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>Categorías</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="onDismiss()">
+        <ion-icon name="close-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="modal-container">
+    <div *ngIf="categories.length === 0" class="empty-state">
+      <ion-icon name="folder-open-outline"></ion-icon>
+      <p>No tienes categorías registradas aún.</p>
+    </div>
+
+    <ion-list lines="none" *ngIf="categories.length > 0">
+      <div *ngFor="let category of categories" class="category-item-container">
+        <ion-item class="category-item">
+          <!-- Círculo de Color -->
+          <div slot="start" class="color-indicator" [style.background]="category.color"></div>
+          
+          <ion-label>
+            <h2>{{ category.name }}</h2>
+            <p>ID: {{ category.id | slice:0:8 }}...</p>
+          </ion-label>
+
+          <!-- Acciones -->
+          <div slot="end" class="actions">
+            <ion-button fill="clear" (click)="onEditCategory(category)" class="btn-edit">
+              <ion-icon name="create-outline" slot="icon-only"></ion-icon>
+            </ion-button>
+            <ion-button fill="clear" (click)="onDeleteCategory(category)" color="danger" class="btn-delete">
+              <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+            </ion-button>
+          </div>
+        </ion-item>
+      </div>
+    </ion-list>
+  </div>
+</ion-content>
