@@ -1,53 +1,70 @@
-<!-- Encabezado del modal -->
-<ion-header>
+<ion-header class="ion-no-border">
   <ion-toolbar>
-
-    <!-- Botón para cerrar/cancelar -->
     <ion-buttons slot="start">
-      <ion-button (click)="onCancel()">
-        <ion-icon name="close"></ion-icon>
+      <ion-button (click)="onCancel()" class="close-btn">
+        <ion-icon slot="icon-only" name="close-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
-
-    <!-- Título dinámico según el modo -->
-    <ion-title>
-      {{ isEditMode ? 'Editar Categoría' : 'Crear Categoría' }}
-    </ion-title>
-
-    <!-- Botón para guardar -->
+    <ion-title>{{ isEditMode ? 'Editar Categoría' : 'Nueva Categoría' }}</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="onSave()" [disabled]="!categoryForm.valid">
-        <ion-icon name="checkmark"></ion-icon>
+      <ion-button (click)="onSave()" [disabled]="!categoryForm.valid" class="save-btn" color="primary">
+        <ion-icon slot="icon-only" name="checkmark-sharp"></ion-icon>
       </ion-button>
     </ion-buttons>
-
   </ion-toolbar>
 </ion-header>
 
-<!-- Contenido del formulario -->
 <ion-content class="ion-padding">
+  <div class="form-container">
+    
+    <div class="preview-area">
+      <p class="preview-label">Vista Previa</p>
+      <div class="preview-chip" [style.background]="categoryForm.get('color')?.value">
+        <span [style.color]="getContrastColor(categoryForm.get('color')?.value)">
+          {{ categoryForm.get('name')?.value || 'Nombre de categoría' }}
+        </span>
+      </div>
+    </div>
 
-  <!-- Formulario reactivo de categoría -->
-  <form [formGroup]="categoryForm">
+    <form [formGroup]="categoryForm">
+      <!-- Nombre -->
+      <div class="input-group">
+        <ion-item lines="none" class="custom-item">
+          <ion-icon name="folder-outline" slot="start" class="field-icon"></ion-icon>
+          <ion-input 
+            label="Nombre" 
+            labelPlacement="floating" 
+            formControlName="name"
+            placeholder="Ej: Personal, Trabajo..."
+            errorText="El nombre es obligatorio">
+          </ion-input>
+        </ion-item>
+      </div>
 
-    <!-- Campo nombre de la categoría -->
-    <ion-item>
-      <ion-input label="Nombre de la Categoría" labelPlacement="floating" formControlName="name"
-        placeholder="Introduce el nombre de la categoría">
-      </ion-input>
-    </ion-item>
-
-    <!-- Selector de color -->
-    <ion-item>
-      <ion-label>Color</ion-label>
-      <input type="color" formControlName="color" class="color-input">
-    </ion-item>
-
-  </form>
-
-  <!-- Botón para eliminar (solo en modo edición) -->
-  <ion-button *ngIf="isEditMode" expand="block" color="danger" class="ion-margin-top" (click)="onDelete()">
-    Eliminar Categoría
-  </ion-button>
-
+      <!-- Selector de Color -->
+      <div class="color-picker-container">
+        <div class="color-header">
+          <ion-icon name="color-palette-outline"></ion-icon>
+          <span>Elige un color para tu categoría</span>
+        </div>
+        
+        <div class="color-input-wrapper">
+          <input type="color" formControlName="color" class="color-input-field">
+          <div class="color-value">{{ categoryForm.get('color')?.value }}</div>
+        </div>
+      </div>
+    </form>
+  </div>
 </ion-content>
+
+<ion-footer class="ion-no-border ion-padding">
+  <div class="footer-actions">
+    <ion-button *ngIf="isEditMode" expand="block" color="danger" fill="clear" (click)="onDelete()" class="delete-btn">
+      <ion-icon name="trash-outline" slot="start"></ion-icon>
+      Eliminar Categoría
+    </ion-button>
+    <ion-button expand="block" (click)="onSave()" [disabled]="!categoryForm.valid" class="main-submit-btn">
+      {{ isEditMode ? 'Guardar Cambios' : 'Crear Categoría' }}
+    </ion-button>
+  </div>
+</ion-footer>
