@@ -1,18 +1,11 @@
-<div align="center">
+# 📱 Todo List Ionic
 
-# 📱 Todo List Ionic - SaaS Edition
-### Gestión de Tareas Profesional con Arquitectura Limpia
+> Aplicación móvil híbrida profesional desarrollada con **Ionic 8**, **Angular 20** y **Cordova** como parte de una solución de gestión de tareas escalable.
 
-[![Ionic](https://img.shields.io/badge/Ionic-8.0-3880FF?style=for-the-badge&logo=ionic&logoColor=white)](https://ionicframework.com/)
-[![Angular](https://img.shields.io/badge/Angular-19.0-DD0031?style=for-the-badge&logo=angular&logoColor=white)](https://angular.io/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Firebase](https://img.shields.io/badge/Firebase-12.7-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)](https://firebase.google.com/)
-
-**"Organiza tu vida con una interfaz moderna, rápida y escalable."** 🚀
-
-[📥 Descargar APK](#-recursos-del-proyecto) • [🏗️ Arquitectura](#-arquitectura-del-proyecto) • [🚀 Instalación](#-instalación)
-
-</div>
+[![Ionic](https://img.shields.io/badge/Ionic-8.0-blue.svg)](https://ionicframework.com/)
+[![Angular](https://img.shields.io/badge/Angular-20.0-red.svg)](https://angular.io/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue.svg)](https://www.typescriptlang.org/)
+[![Firebase](https://img.shields.io/badge/Firebase-11.10-orange.svg)](https://firebase.google.com/)
 
 ---
 
@@ -20,11 +13,12 @@
 
 - [Descripción del Proyecto](#-descripción-del-proyecto)
 - [Características Principales](#-características-principales)
-- [Arquitectura del Proyecto](#-arquitectura-del-proyecto)
-- [Estructura de Carpetas](#-estructura-del-proyecto)
 - [Requisitos Previos](#-requisitos-previos)
 - [Instalación](#-instalación)
-- [Ejecución y Compilación](#-ejecución-de-la-aplicación)
+- [Ejecución de la Aplicación](#-ejecución-de-la-aplicación)
+- [Compilación para Android](#-compilación-para-android)
+- [Configuración de Firebase](#-configuración-de-firebase)
+- [Estructura del Proyecto](#-estructura-del-proyecto)
 - [Optimizaciones de Rendimiento](#-optimizaciones-de-rendimiento)
 - [Recursos del Proyecto](#-recursos-del-proyecto)
 
@@ -32,128 +26,171 @@
 
 ## 🎯 Descripción del Proyecto
 
-**Todo List Ionic** es una aplicación móvil híbrida de alto rendimiento diseñada para la gestión eficiente de actividades diarias. Implementa una **Arquitectura Limpia (Clean Architecture)** desacoplada, lo que permite un mantenimiento sencillo y una escalabilidad garantizada.
+**Todo List Ionic** es una aplicación móvil robusta diseñada bajo el paradigma de **Clean Architecture**. Su objetivo es proporcionar una herramienta fluida para organizar actividades diarias, permitiendo la sincronización en la nube y el funcionamiento offline.
 
-La aplicación utiliza las últimas capacidades de **Angular 19**, como el nuevo control flow nativo y componentes standalone, logrando una experiencia de usuario fluida y una interfaz tipo SaaS moderna.
+### Funcionalidades Core
+
+- ✅ **Gestión de Tareas**: Flujo CRUD completo con estados dinámicos.
+- 🏷️ **Categorización**: Clasificación por etiquetas con colores personalizados.
+- 🔍 **Filtrado Avanzado**: Segmentación por categoría y estado desde el Dashboard.
+- 💾 **Persistencia Híbrida**: Sincronización con Firestore y respaldo en LocalStorage (Upsert Logic).
+- 🔐 **Autenticación**: Registro e inicio de sesión seguro gestionado por Firebase.
 
 ---
 
 ## ✨ Características Principales
 
-### 📝 Gestión de Tareas Pro
-- **CRUD Avanzado**: Crear, editar y eliminar tareas con estados (*Nueva, Programada, En Progreso, Completada*).
-- **Jerarquía Visual**: Diseño de tarjetas con sombras sutiles, efectos glow y tipografía moderna.
-- **Control de Estado**: Marca tareas como finalizadas con un solo toque y feedback visual instantáneo.
+### 1. Gestión de Tareas Pro
+- Interfaz moderna tipo SaaS con componentes personalizados.
+- Estados de tarea: **Nueva, Programada, En Progreso y Completada**.
+- Feedback visual instantáneo mediante efectos glow y sombras sutiles.
 
-### 🏷️ Sistema de Categorías Inteligente
-- **Categorización Dinámica**: Organiza tus tareas por etiquetas personalizables.
-- **Selector de Color**: Asigna colores únicos a tus categorías para un escaneo visual rápido.
-- **Filtrado en Tiempo Real**: Dashboard segmentado por categorías desde el encabezado.
+### 2. Sistema de Categorías
+- Creación de categorías con selector de color.
+- Gestión centralizada de categorías mediante modal dedicado.
+- Filtrado rápido mediante segmentos dinámicos.
 
-### 🔐 Seguridad y Persistencia Dual
-- **Firebase Auth**: Registro e inicio de sesión seguro.
-- **Sincronización Híbrida**: Almacenamiento persistente en **Firestore** con respaldo automático en **LocalStorage** para soporte offline (Upsert Logic).
+### 3. Rendimiento Optimizado
+- Implementación de **Angular 20 Control Flow** (`@if`, `@for`).
+- Paginación técnica para manejo de grandes volúmenes de datos.
+- Arquitectura desacoplada para fácil mantenimiento.
 
 ---
 
-## 🏗️ Arquitectura del Proyecto
+## 📦 Requisitos Previos
 
-El proyecto se rige por los principios **SOLID** y **Clean Architecture**, dividiendo la aplicación en capas de responsabilidad única:
+Antes de comenzar, asegúrate de tener instalado:
 
+| Software       | Versión Mínima | Comando de Verificación |
+| -------------- | -------------- | ----------------------- |
+| Node.js        | 18.x           | `node --version`        |
+| npm            | 10.x           | `npm --version`         |
+| Ionic CLI      | 7.x            | `ionic --version`       |
+| Cordova        | 12.x           | `cordova --version`     |
+| Android Studio | Latest         | -                       |
+
+---
+
+## 🚀 Instalación
+
+### 1. Clonar el Repositorio
+```bash
+git clone https://github.com/SoffiaSanchezz/ToDo-List.git
+cd Todo_List
 ```
-┌─────────────────────────────────────────┐
-│         Presentation Layer (UI)         │
-│      (Angular Standalone Components)    │
-├─────────────────────────────────────────┤
-│         Application Layer (Logic)       │
-│      (Use Cases & Todo Interactors)     │
-├─────────────────────────────────────────┤
-│          Domain Layer (Entities)        │
-│     (Plain Objects & Repo Contracts)    │
-├─────────────────────────────────────────┤
-│       Infrastructure Layer (Data)       │
-│   (Firebase, LocalStorage, Services)    │
-└─────────────────────────────────────────┘
+
+### 2. Instalar Dependencias
+```bash
+npm install
+```
+
+### 3. Configurar Entornos
+Crea el archivo `src/environments/environment.ts` basándote en la configuración de Firebase (ver sección correspondiente).
+
+### 4. Herramientas Globales (Si no las tienes)
+```bash
+npm install -g @ionic/cli cordova native-run
+```
+
+---
+
+## 💻 Ejecución de la Aplicación
+
+### Modo Navegador (Desarrollo Web)
+La forma más rápida de probar la UI:
+```bash
+ionic serve
+```
+Disponible en: `http://localhost:8100`
+
+### Modo Dispositivo/Emulador Android
+Para probar funcionalidades nativas y plugins:
+```bash
+# Con Live Reload (recomendado para desarrollo)
+ionic cordova run android --livereload
+
+# Ejecución estándar
+ionic cordova run android
+```
+
+---
+
+## 📱 Compilación para Android
+
+### Generar APK de Desarrollo
+```bash
+ionic cordova build android
+```
+**Ubicación del APK:** `platforms/android/app/build/outputs/apk/debug/app-debug.apk`
+
+### Compilación para Producción
+```bash
+ionic cordova build android --prod --release
+```
+
+### Abrir en Android Studio
+Si necesitas realizar ajustes nativos o debugging avanzado:
+1. Abre Android Studio.
+2. Selecciona **Open** y navega a `platforms/android`.
+
+---
+
+## 🔥 Configuración de Firebase
+
+### 1. Crear el Proyecto
+1. Ve a [Firebase Console](https://console.firebase.google.com/).
+2. Añade un nuevo proyecto llamado `Todo-List`.
+3. Habilita **Authentication** (Email/Password).
+4. Crea una base de datos **Firestore** en modo prueba.
+
+### 2. Integración en la App
+Copia tus credenciales de la consola de Firebase y actualiza:
+`src/environments/environment.ts`
+
+```typescript
+export const environment = {
+  production: false,
+  firebase: {
+    apiKey: "TU_API_KEY",
+    authDomain: "TU_DOMINIO.firebaseapp.com",
+    projectId: "TU_PROJECT_ID",
+    storageBucket: "TU_BUCKET.firebasestorage.app",
+    messagingSenderId: "TU_SENDER_ID",
+    appId: "TU_APP_ID"
+  }
+};
 ```
 
 ---
 
 ## 📁 Estructura del Proyecto
 
+El proyecto sigue una estructura **Modular y de Arquitectura Limpia**:
+
 ```
 src/app/
 ├── core/                    # Clases base, contratos y tipos globales
-├── features/                # Módulos de funcionalidad (Modular Architecture)
+├── features/                # Características modulares
 │   ├── auth/                # Registro, Login y seguridad
-│   └── todo/                # Feature Core: Tareas y Categorías
-│       ├── application/     # Casos de uso (Lógica de negocio)
-│       ├── domain/          # Entidades y definición de interfaces
-│       ├── data/            # Implementación de repositorios y datasources
-│       └── presentation/    # Componentes standalone, páginas y SCSS
-├── shared/                  # Componentes reutilizables, mocks y servicios globales
-└── theme/                   # Diseño SaaS: Variables y estilos globales
+│   └── todo/                # Tareas y Categorías (Domain, Data, UI)
+├── shared/                  # Componentes reutilizables y servicios globales
+└── theme/                   # Estilos SaaS y variables globales
 ```
 
----
-
-## 📦 Requisitos Previos
-
-| Software | Versión Mínima | Comando de Verificación |
-| -------------- | -------------- | ----------------------- |
-| **Node.js** | 18.x | `node --version` |
-| **npm** | 10.x | `npm --version` |
-| **Ionic CLI** | 7.x | `ionic --version` |
-| **Cordova** | 12.x | `cordova --version` |
-
----
-
-## 🚀 Instalación
-
-1. **Clonar el Repositorio**
-   ```bash
-   git clone https://github.com/SoffiaSanchezz/ToDo-List.git
-   cd ToDo-List
-   ```
-
-2. **Instalar Dependencias**
-   ```bash
-   npm install
-   ```
-
-3. **Configurar Entorno**
-   Configura tus credenciales de Firebase en `src/environments/environment.ts`.
-
----
-
-## 💻 Ejecución de la Aplicación
-
-### Desarrollo
-```bash
-# Servidor de desarrollo (Navegador)
-ionic serve
-
-# Android con Live Reload
-ionic cordova run android --livereload
-```
-
-### Compilación (Build)
-```bash
-# Generar APK de Debug
-ionic cordova build android
-
-# Generar Build de Producción optimizada
-ionic cordova build android --prod --release
-```
+### Arquitectura de Capas
+1. **Presentation**: Componentes Standalone y lógica de UI.
+2. **Application**: Casos de uso (Interactors).
+3. **Domain**: Entidades puras y contratos de repositorios.
+4. **Infrastructure**: Implementaciones de Firebase y LocalStorage.
 
 ---
 
 ## ⚡ Optimizaciones de Rendimiento
 
-1. **Angular 19 Control Flow**: Implementación de `@if`, `@for` y `@switch` nativos para una reducción del 15% en el tiempo de renderizado.
-2. **Infinite Scroll**: Carga segmentada de 50 items para mantener la fluidez en listas masivas.
-3. **TrackBy Logic**: Reducción de re-renders innecesarios en el DOM al manipular listas de tareas.
-4. **Standalone Components**: Eliminación de módulos pesados para un bundle inicial más ligero.
-5. **Upsert Storage**: Algoritmo de sincronización local que evita errores de consistencia de datos.
+- **Angular Control Flow**: Renderización nativa ultrarrápida.
+- **Lazy Loading**: Los módulos se cargan solo bajo demanda.
+- **TrackBy**: Optimización de listas de tareas.
+- **Upsert Local Logic**: Evita latencias de red mediante gestión local inteligente.
 
 ---
 
@@ -161,18 +198,15 @@ ionic cordova build android --prod --release
 
 <div style="display: flex; justify-content: center; gap: 30px; flex-wrap: wrap;">
   
-  <!-- APK Card -->
-  <div style="border: 1px solid #e2e8f0; padding: 24px; border-radius: 20px; text-align: center; width: 240px; background: #fff; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
-    <h3>📥 APK Móvil</h3>
-    <a href="https://drive.google.com/file/d/1goMBCKXdXOcD4Wx7rOiaL3czC5TtBDAY/view?usp=sharing" target="_blank" style="text-decoration: none; font-weight: bold; color: #3880FF; font-size: 1.1rem;">Descargar</a>
-    <p style="font-size: 12px; color: #64748b; margin-top: 12px;"><b>Usuario:</b> user@admin.com<br/><b>Password:</b> password1234</p>
+  <div style="border: 1px solid #ddd; padding: 20px; border-radius: 12px; text-align: center; width: 220px; background: #fff;">
+    <h3>📥 APK</h3>
+    <a href="https://drive.google.com/file/d/1goMBCKXdXOcD4Wx7rOiaL3czC5TtBDAY/view?usp=sharing" target="_blank" style="text-decoration: none; font-weight: bold; color: #3880FF;">Descargar</a>
+    <p style="font-size: 12px; color: #666; margin-top: 10px;">User: user@admin.com<br/>Pass: password1234</p>
   </div>
 
-  <!-- Trello Card -->
-  <div style="border: 1px solid #e2e8f0; padding: 24px; border-radius: 20px; text-align: center; width: 240px; background: #fff; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
+  <div style="border: 1px solid #ddd; padding: 20px; border-radius: 12px; text-align: center; width: 220px; background: #fff;">
     <h3>📋 Roadmap</h3>
-    <a href="https://trello.com/b/3C8tf2PE/todolist" target="_blank" style="text-decoration: none; font-weight: bold; color: #0079BF; font-size: 1.1rem;">Ver Trello</a>
-    <p style="font-size: 12px; color: #64748b; margin-top: 12px;">Gestión de tareas y seguimiento del desarrollo.</p>
+    <a href="https://trello.com/b/3C8tf2PE/todolist" target="_blank" style="text-decoration: none; font-weight: bold; color: #0079BF;">Ver Trello</a>
   </div>
 
 </div>
@@ -180,14 +214,12 @@ ionic cordova build android --prod --release
 ---
 
 ## 📄 Licencia
-Este proyecto está bajo la Licencia **MIT**. Siéntete libre de usarlo como base para tus propios desarrollos.
+Este proyecto está bajo la Licencia **MIT**.
 
 ---
 
 <div align="center">
 
 **Desarrollado con ❤️ por [SofiaSanchez](https://github.com/SoffiaSanchezz)**
-
-[⬆️ Volver al inicio](#-todo-list-app)
 
 </div>
