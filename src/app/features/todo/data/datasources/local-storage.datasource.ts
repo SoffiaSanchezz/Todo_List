@@ -98,18 +98,21 @@ export class LocalStorageDatasource {
         obs.subscribe({
           next: (items) => {
             const index = items.findIndex(i => i.id === item.id);
+            const updatedItems = [...items];
+            
             if (index > -1) {
-              const updatedItems = [...items];
               updatedItems[index] = item;
-              try {
-                localStorage.setItem(this._storageKeyPrefix + collectionName, JSON.stringify(updatedItems));
-                subscriber.next(item);
-                subscriber.complete();
-              } catch (error) {
-                subscriber.error(new Error(`Error updating ${collectionName} in local storage: ${error}`));
-              }
             } else {
-              subscriber.error(new Error(`Item with ID ${item.id} not found in ${collectionName}.`));
+              // Si no existe localmente, lo agregamos (upsert)
+              updatedItems.push(item);
+            }
+
+            try {
+              localStorage.setItem(this._storageKeyPrefix + collectionName, JSON.stringify(updatedItems));
+              subscriber.next(item);
+              subscriber.complete();
+            } catch (error) {
+              subscriber.error(new Error(`Error updating ${collectionName} in local storage: ${error}`));
             }
           },
           error: (err) => subscriber.error(err)
