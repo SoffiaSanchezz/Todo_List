@@ -1,56 +1,95 @@
-<ion-header>
+<ion-header class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-button (click)="onCancel()">
-        <ion-icon name="close"></ion-icon>
+      <ion-button (click)="onCancel()" class="close-btn">
+        <ion-icon slot="icon-only" name="close-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title>{{ isEditMode ? 'Editar Tarea' : 'Crear Tarea' }}</ion-title>
+    <ion-title>{{ isEditMode ? 'Editar Tarea' : 'Nueva Tarea' }}</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="onSave()" [disabled]="!taskForm.valid">
-        <ion-icon name="checkmark"></ion-icon>
+      <ion-button (click)="onSave()" [disabled]="!taskForm.valid" class="save-btn" color="primary">
+        <ion-icon slot="icon-only" name="checkmark-sharp"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-  <!-- Wrapped form in a card for better visual hierarchy -->
-  <ion-card class="form-card">
-    <ion-card-content>  
-      <form [formGroup]="taskForm">
-        <ion-item>
-          <ion-input label="Título" labelPlacement="floating" formControlName="title"
-            placeholder="Título de la tarea"></ion-input>
+  <div class="form-container">
+    <form [formGroup]="taskForm">
+      
+      <!-- Título -->
+      <div class="input-group">
+        <ion-item lines="none" class="custom-item">
+          <ion-icon name="bookmark-outline" slot="start" class="field-icon"></ion-icon>
+          <ion-input 
+            label="Título de la tarea" 
+            labelPlacement="floating" 
+            formControlName="title"
+            placeholder="Ej: Comprar materiales"
+            errorText="El título es obligatorio">
+          </ion-input>
         </ion-item>
+      </div>
 
-        <ion-item>
-          <ion-textarea label="Descripción" labelPlacement="floating" formControlName="description" rows="3"
-            placeholder="Descripción de la tarea"></ion-textarea>
+      <!-- Descripción -->
+      <div class="input-group">
+        <ion-item lines="none" class="custom-item">
+          <ion-icon name="document-text-outline" slot="start" class="field-icon"></ion-icon>
+          <ion-textarea 
+            label="Descripción" 
+            labelPlacement="floating" 
+            formControlName="description" 
+            rows="4"
+            placeholder="Añade detalles adicionales..."
+            [autoGrow]="true">
+          </ion-textarea>
         </ion-item>
+      </div>
 
-        <ion-item>
-          <ion-select label="Estado" labelPlacement="floating" formControlName="status">
-            <ion-select-option *ngFor="let status of taskStatuses" [value]="status">
-              {{ status | titlecase }}
-            </ion-select-option>
-          </ion-select>
-        </ion-item>
+      <div class="row-group">
+        <!-- Estado -->
+        <div class="input-group half">
+          <ion-item lines="none" class="custom-item">
+            <ion-icon name="stats-chart-outline" slot="start" class="field-icon"></ion-icon>
+            <ion-select label="Estado" labelPlacement="floating" formControlName="status" interface="popover">
+              <ion-select-option *ngFor="let status of taskStatuses" [value]="status">
+                {{ status | titlecase }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+        </div>
 
-        <ion-item>
-          <ion-select label="Categoría" labelPlacement="floating" formControlName="categoryId"
-            placeholder="Seleccionar Categoría">
-            <ion-select-option [value]="null">Sin Categoría</ion-select-option>
-            <ion-select-option *ngFor="let category of categories" [value]="category.id">
-              {{ category.name }}
-            </ion-select-option>
-          </ion-select>
-        </ion-item>
+        <!-- Categoría -->
+        <div class="input-group half">
+          <ion-item lines="none" class="custom-item">
+            <ion-icon name="grid-outline" slot="start" class="field-icon"></ion-icon>
+            <ion-select label="Categoría" labelPlacement="floating" formControlName="categoryId"
+              placeholder="Elegir..." interface="popover">
+              <ion-select-option [value]="null">Ninguna</ion-select-option>
+              <ion-select-option *ngFor="let category of categories" [value]="category.id">
+                {{ category.name }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+        </div>
+      </div>
 
-        <ion-item *ngIf="isEditMode">
-          <ion-toggle formControlName="completed">Completada</ion-toggle>
-        </ion-item>
-      </form>
-    </ion-card-content>
-  </ion-card>
+      <!-- Toggle Completada (Solo en edición) -->
+      <ion-item *ngIf="isEditMode" lines="none" class="toggle-item">
+        <ion-icon [name]="taskForm.get('completed')?.value ? 'checkbox' : 'square-outline'" 
+                  [color]="taskForm.get('completed')?.value ? 'success' : 'medium'"
+                  slot="start"></ion-icon>
+        <ion-label>Marcar como completada</ion-label>
+        <ion-toggle formControlName="completed" color="success"></ion-toggle>
+      </ion-item>
+
+    </form>
+  </div>
 </ion-content>
+
+<ion-footer class="ion-no-border ion-padding">
+  <ion-button expand="block" (click)="onSave()" [disabled]="!taskForm.valid" class="main-submit-btn">
+    {{ isEditMode ? 'Guardar Cambios' : 'Crear Tarea' }}
+  </ion-button>
+</ion-footer>

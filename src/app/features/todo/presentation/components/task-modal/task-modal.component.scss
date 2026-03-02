@@ -1,156 +1,175 @@
+:host {
+  --input-bg: #f8fafc;
+  --input-border: #e2e8f0;
+  --input-focus: var(--ion-color-primary);
+  --input-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --transition-speed: 0.25s;
+}
+
+ion-header {
+  ion-toolbar {
+    --background: #ffffff;
+    --color: #1e293b;
+    padding-top: 8px;
+    padding-bottom: 8px;
+
+    ion-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .close-btn {
+      --color: #64748b;
+      font-size: 1.2rem;
+    }
+
+    .save-btn {
+      --padding-end: 8px;
+      font-weight: 700;
+    }
+  }
+}
+
 ion-content {
-  --background: linear-gradient(135deg, var(--ion-color-light) 0%, var(--ion-color-light-shade) 100%);
+  --background: #ffffff;
+}
+
+.form-container {
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 form {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
 }
 
-ion-item {
-  margin-bottom: 0;
-  --background: #ffffff;
-  --border-radius: 12px;
-  --inner-padding-end: 20px;
-  --padding-start: 20px;
-  --padding-top: 16px;
-  --padding-bottom: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  border: 2px solid transparent;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  &.half {
+    flex: 1;
+  }
+}
+
+.row-group {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+
+  @media (max-width: 576px) {
+    flex-direction: column;
+  }
+}
+
+.custom-item {
+  --background: var(--input-bg);
+  --border-radius: 16px;
+  --padding-start: 16px;
+  --inner-padding-end: 16px;
+  --padding-top: 8px;
+  --padding-bottom: 8px;
+  --min-height: 64px;
+  border: 2px solid var(--input-border);
+  box-shadow: var(--input-shadow);
+  transition: all var(--transition-speed) ease;
+  margin-bottom: 4px;
+
+  &::part(native) {
+    background: var(--input-bg);
+  }
+
+  .field-icon {
+    color: #94a3b8;
+    margin-top: 12px;
+    font-size: 1.4rem;
+    transition: color var(--transition-speed) ease;
+  }
+
+  ion-input, ion-textarea, ion-select {
+    --padding-start: 0;
+    --color: #1e293b;
+    font-weight: 500;
+    
+    &::part(label) {
+      color: #64748b;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+  }
 
   &:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-    transform: translateY(-2px);
+    border-color: #cbd5e1;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   }
 
-  &:focus-within {
-    border-color: var(--ion-color-primary);
-    box-shadow: 0 4px 16px rgba(var(--ion-color-primary-rgb, 56, 128, 255), 0.2);
-  }
+  &.item-has-focus {
+    border-color: var(--input-focus);
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(var(--ion-color-primary-rgb, 56, 128, 255), 0.1);
 
-  ion-input,
-  ion-textarea,
-  ion-select,
-  ion-toggle,
-  ion-datetime {
-    --padding-start: 0;
-    --padding-end: 0;
-    font-size: 0.95rem;
-    --color: #000000;
-    color: #000000;
-    --placeholder-color: #666666;
+    .field-icon {
+      color: var(--input-focus);
+    }
   }
+}
 
+.toggle-item {
+  --background: #f1f5f9;
+  --border-radius: 16px;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  margin-top: 12px;
+  
   ion-label {
     font-weight: 600;
-    color: #333333;
-    font-size: 0.85rem;
-    letter-spacing: 0.3px;
-    transition: all 0.2s ease-in-out;
+    color: #475569;
   }
 
-  &.item-has-focus ion-label,
-  &.item-has-value ion-label {
-    color: var(--ion-color-primary);
+  ion-icon {
+    font-size: 1.5rem;
+    margin-right: 12px;
   }
 }
 
-ion-select {
-  --placeholder-color: #666666;
+ion-footer {
+  background: #ffffff;
+  
+  .main-submit-btn {
+    --border-radius: 16px;
+    --box-shadow: 0 10px 15px -3px rgba(var(--ion-color-primary-rgb), 0.3);
+    height: 56px;
+    font-weight: 700;
+    font-size: 1rem;
+    margin: 0;
+    text-transform: none;
+    letter-spacing: 0.5px;
+    transition: all var(--transition-speed) ease;
 
-  &::part(text) {
-    color: #000000;
-  }
-}
-
-ion-input.ng-invalid.ng-touched,
-ion-textarea.ng-invalid.ng-touched,
-ion-select.ng-invalid.ng-touched {
-  --border-color: var(--ion-color-danger);
-  --highlight-background: var(--ion-color-danger-tint);
-}
-
-.color-input {
-  width: 100%;
-  height: 48px;
-  border: none;
-  background: transparent;
-  padding: 4px;
-  cursor: pointer;
-  -webkit-appearance: none;
-  appearance: none;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-
-  &:hover {
-    transform: scale(1.02);
-    box-shadow: 0 0 0 4px rgba(var(--ion-color-primary-rgb, 56, 128, 255), 0.1);
-  }
-
-  &::-webkit-color-swatch-wrapper {
-    padding: 0;
-  }
-
-  &::-webkit-color-swatch {
-    border: 3px solid #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  }
-
-  &::-moz-color-swatch-wrapper {
-    padding: 0;
-  }
-
-  &::-moz-color-swatch {
-    border: 3px solid #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  }
-}
-
-ion-button[color="danger"] {
-  --border-radius: 12px;
-  --box-shadow: 0 4px 12px rgba(var(--ion-color-danger-rgb, 235, 68, 90), 0.3);
-  font-weight: 600;
-  height: 48px;
-  transition: all 0.3s ease;
-
-  &:hover {
-    transform: translateY(-2px);
-    --box-shadow: 0 6px 16px rgba(var(--ion-color-danger-rgb, 235, 68, 90), 0.4);
-  }
-
-  &:active {
-    transform: translateY(0);
-  }
-}
-
-// Header improvements
-ion-header {
-  ion-toolbar {
-    --background: #000;
-    --border-width: 0;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-
-    ion-title {
-      font-weight: 700;
-      font-size: 1.1rem;
-      letter-spacing: 0.3px;
+    &:hover {
+      --box-shadow: 0 20px 25px -5px rgba(var(--ion-color-primary-rgb), 0.4);
+      transform: translateY(-2px);
     }
 
-    ion-button {
-      --border-radius: 8px;
-      transition: all 0.2s ease;
+    &:active {
+      transform: translateY(0);
+    }
+  }
+}
 
-      &:hover {
-        transform: scale(1.1);
-      }
+// Estilos para validación de errores
+.ng-invalid.ng-touched {
+  &.custom-item {
+    border-color: var(--ion-color-danger);
+    background: rgba(var(--ion-color-danger-rgb), 0.02);
 
-      ion-icon {
-        font-size: 1.5rem;
-      }
+    .field-icon {
+      color: var(--ion-color-danger);
     }
   }
 }
