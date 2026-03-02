@@ -200,8 +200,8 @@ src/app/
   
   <div style="border: 1px solid #ddd; padding: 20px; border-radius: 12px; text-align: center; width: 220px; background: #fff;">
     <h3>📥 APK</h3>
-    <a href="https://drive.google.com/file/d/1goMBCKXdXOcD4Wx7rOiaL3czC5TtBDAY/view?usp=sharing" target="_blank" style="text-decoration: none; font-weight: bold; color: #3880FF;">Descargar</a>
-    <p style="font-size: 12px; color: #666; margin-top: 10px;">User: user@admin.com<br/>Pass: password1234</p>
+    <a href="https://drive.google.com/file/d/1aM5lDPKazuklXX_nXGRSUIE-kpcOyLBi/view" target="_blank" style="text-decoration: none; font-weight: bold; color: #3880FF;">Descargar</a>
+    <p style="font-size: 12px; color: #666; margin-top: 10px;">User: admin@admin.com<br/>Pass: contraseña123</p>
   </div>
 
   <div style="border: 1px solid #ddd; padding: 20px; border-radius: 12px; text-align: center; width: 220px; background: #fff;">
