@@ -16,4 +16,8 @@ export class HeaderComponent {
 
   constructor() { }
 
+  onHeaderClick() {
+    console.log('Header clicked - Ready for expansion');
+  }
+
 }
