@@ -71,7 +71,7 @@ form {
   gap: 12px;
 
   .input-icon {
-    margin-top: 28px;
+    margin-top: 32px; // Ajustado para centrar mejor con el label stacked
     font-size: 1.2rem;
     color: var(--text-muted);
     transition: var(--transition);
@@ -89,27 +89,33 @@ form {
   --border-radius: 12px;
   --padding-start: 12px;
   --inner-padding-end: 12px;
+  --min-height: 68px; // Asegura espacio para label + input
   width: 100%;
   border: 1px solid var(--border-color);
   transition: var(--transition);
   box-shadow: var(--shadow-sm);
+  margin-bottom: 2px;
 
   &::part(native) {
     background: transparent;
+    padding-top: 8px;
+    padding-bottom: 8px;
   }
 
   ion-input, ion-textarea, ion-select {
     --color: var(--text-main);
     font-weight: 500;
     font-size: 0.95rem;
+    width: 100%;
 
     &::part(label) {
       color: var(--text-muted);
-      font-weight: 600;
-      font-size: 0.8rem;
+      font-weight: 700;
+      font-size: 0.75rem;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
+      opacity: 0.8;
     }
   }
 
@@ -125,6 +131,30 @@ form {
   }
 }
 
+// Corrección específica para que el valor del SELECT sea visible
+ion-select {
+  justify-content: space-between;
+  --padding-start: 0;
+  
+  &::part(text) {
+    color: var(--text-main);
+    font-weight: 600;
+    padding-top: 4px;
+  }
+
+  &::part(placeholder) {
+    color: var(--text-muted);
+    opacity: 0.6;
+  }
+  
+  &::part(icon) {
+    color: var(--text-muted);
+    font-size: 1rem;
+    opacity: 0.5;
+  }
+}
+
+// Estilos de validación
 .ng-invalid.ng-touched {
   &.saas-item {
     border-color: var(--ion-color-danger);
@@ -191,17 +221,5 @@ form {
       opacity: 0.6;
       --box-shadow: none;
     }
-  }
-}
-
-ion-select {
-  &::part(placeholder), &::part(text) {
-    color: var(--text-main);
-    opacity: 1;
-  }
-  
-  &::part(icon) {
-    color: var(--text-muted);
-    font-size: 1rem;
   }
 }
