@@ -1,56 +1,95 @@
-<ion-header>
+<ion-header class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-button (click)="onCancel()">
-        <ion-icon name="close"></ion-icon>
+      <ion-button (click)="onCancel()" class="close-modal-btn">
+        <ion-icon slot="icon-only" name="close-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title>{{ isEditMode ? 'Editar Tarea' : 'Crear Tarea' }}</ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="onSave()" [disabled]="!taskForm.valid">
-        <ion-icon name="checkmark"></ion-icon>
+    <ion-title>{{ isEditMode ? 'Editar Tarea' : 'Nueva Tarea' }}</ion-title>
+    <ion-buttons slot="end" *ngIf="!isEditMode">
+      <ion-button (click)="onSave()" [disabled]="!taskForm.valid" class="save-modal-btn" color="primary">
+        Crear
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <!-- Wrapped form in a card for better visual hierarchy -->
-  <ion-card class="form-card">
-    <ion-card-content>  
-      <form [formGroup]="taskForm">
-        <ion-item>
-          <ion-input label="Título" labelPlacement="floating" formControlName="title"
-            placeholder="Título de la tarea"></ion-input>
-        </ion-item>
+<ion-content class="ion-padding modal-content-saas">
+  <div class="form-wrapper">
+    <form [formGroup]="taskForm">
+      
+      <!-- Sección Principal -->
+      <div class="form-section">
+        <div class="input-container">
+          <ion-icon name="text-outline" class="input-icon"></ion-icon>
+          <ion-item lines="none" class="saas-item">
+            <ion-input 
+              label="¿Qué hay que hacer?" 
+              labelPlacement="stacked" 
+              formControlName="title"
+              placeholder="Ej: Revisar reporte trimestral"
+              class="main-input">
+            </ion-input>
+          </ion-item>
+        </div>
 
-        <ion-item>
-          <ion-textarea label="Descripción" labelPlacement="floating" formControlName="description" rows="3"
-            placeholder="Descripción de la tarea"></ion-textarea>
-        </ion-item>
+        <div class="input-container">
+          <ion-icon name="reader-outline" class="input-icon"></ion-icon>
+          <ion-item lines="none" class="saas-item">
+            <ion-textarea 
+              label="Detalles adicionales" 
+              labelPlacement="stacked" 
+              formControlName="description" 
+              rows="4"
+              placeholder="Añade una descripción más detallada..."
+              [autoGrow]="true">
+            </ion-textarea>
+          </ion-item>
+        </div>
+      </div>
 
-        <ion-item>
-          <ion-select label="Estado" labelPlacement="floating" formControlName="status">
-            <ion-select-option *ngFor="let status of taskStatuses" [value]="status">
-              {{ status | titlecase }}
-            </ion-select-option>
-          </ion-select>
-        </ion-item>
+      <!-- Configuración de Tarea -->
+      <div class="form-grid">
+        <div class="input-container">
+          <ion-icon name="flag-outline" class="input-icon"></ion-icon>
+          <ion-item lines="none" class="saas-item">
+            <ion-select label="Estado" labelPlacement="stacked" formControlName="status" interface="popover" toggleIcon="chevron-down-outline">
+              <ion-select-option *ngFor="let status of taskStatuses" [value]="status">
+                {{ status | titlecase }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+        </div>
 
-        <ion-item>
-          <ion-select label="Categoría" labelPlacement="floating" formControlName="categoryId"
-            placeholder="Seleccionar Categoría">
-            <ion-select-option [value]="null">Sin Categoría</ion-select-option>
-            <ion-select-option *ngFor="let category of categories" [value]="category.id">
-              {{ category.name }}
-            </ion-select-option>
-          </ion-select>
-        </ion-item>
+        <div class="input-container">
+          <ion-icon name="pricetag-outline" class="input-icon"></ion-icon>
+          <ion-item lines="none" class="saas-item">
+            <ion-select label="Categoría" labelPlacement="stacked" formControlName="categoryId"
+              placeholder="Seleccionar..." interface="popover" toggleIcon="chevron-down-outline">
+              <ion-select-option [value]="null">Sin categoría</ion-select-option>
+              <ion-select-option *ngFor="let category of categories" [value]="category.id">
+                {{ category.name }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+        </div>
+      </div>
 
-        <ion-item *ngIf="isEditMode">
-          <ion-toggle formControlName="completed">Completada</ion-toggle>
-        </ion-item>
-      </form>
-    </ion-card-content>
-  </ion-card>
+      <!-- Estado de Finalización -->
+      <div class="toggle-container" *ngIf="isEditMode">
+        <div class="toggle-info">
+          <ion-icon name="checkmark-circle-outline" [color]="taskForm.get('completed')?.value ? 'success' : 'medium'"></ion-icon>
+          <ion-label>Marcar como finalizada</ion-label>
+        </div>
+        <ion-toggle formControlName="completed" color="success"></ion-toggle>
+      </div>
+
+    </form>
+  </div>
 </ion-content>
+
+<ion-footer class="ion-no-border ion-padding footer-saas">
+  <ion-button expand="block" (click)="onSave()" [disabled]="!taskForm.valid" class="btn-primary-saas">
+    {{ isEditMode ? 'Actualizar Tarea' : 'Guardar Tarea' }}
+  </ion-button>
+</ion-footer>
