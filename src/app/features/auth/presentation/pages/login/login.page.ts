@@ -1,5 +1,5 @@
 // src/app/login/login.page.ts
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit, NgZone, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
@@ -8,6 +8,7 @@ import { ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angula
 
 import { SessionProviderservice } from 'src/app/shared/services/auth/session-provider.service';
 import { HeaderComponent } from 'src/app/shared/components/header/header.component';
+import { LoaderService } from 'src/app/shared/services/loader/loader.service';
 
 @Component({
   selector: 'app-login',
@@ -17,6 +18,7 @@ import { HeaderComponent } from 'src/app/shared/components/header/header.compone
   imports: [CommonModule, FormsModule, ReactiveFormsModule, IonicModule, HeaderComponent]
 })
 export class LoginPage implements OnInit {
+  private loaderService = inject(LoaderService);
   errorMessage: string | null = null;
   loginForm: FormGroup;
   isLoading = false;
@@ -47,6 +49,7 @@ export class LoginPage implements OnInit {
 
     try {
       this.isLoading = true;
+      this.loaderService.show('Iniciando sesión...');
       const result = await this.sessionService.login(email, password);
 
       this.ngZone.run(() => {
@@ -57,6 +60,7 @@ export class LoginPage implements OnInit {
       this.handleAuthError(error);
     } finally {
       this.isLoading = false;
+      this.loaderService.hide();
     }
   }
 
@@ -64,16 +68,19 @@ export class LoginPage implements OnInit {
     this.errorMessage = null;
     try {
       this.isLoading = true;
+      this.loaderService.show('Conectando con Google...');
       const result = await this.sessionService.signInWithGoogle();
 
       setTimeout(() => {
         this.ngZone.run(() => {
           this.router.navigate(['/todo'], { replaceUrl: true });
         });
+        this.loaderService.hide();
       }, 500);
 
     } catch (error: any) {
       this.handleAuthError(error);
+      this.loaderService.hide();
     } finally {
       this.isLoading = false;
     }

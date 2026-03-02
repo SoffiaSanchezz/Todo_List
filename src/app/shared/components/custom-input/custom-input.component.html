@@ -1,14 +1,25 @@
-<ion-item>
-  <ion-label position="floating">{{ label }}</ion-label>
-  <ion-input [type]="showPasswordToggle && !passwordVisible ? 'password' : type" [placeholder]="placeholder"
-    [value]="value" [disabled]="isDisabled" (ionInput)="onInputChange($event)" (ionBlur)="onTouched()"></ion-input>
-  <ion-icon *ngIf="showPasswordToggle" slot="end" [name]="passwordVisible ? 'eye-off' : 'eye'"
-    (click)="togglePasswordVisibility()"></ion-icon>
-</ion-item>
-<ion-note *ngIf="ngControl?.control?.touched" color="danger">
-  <ng-container *ngFor="let errorKey of getErrorKeys()">
-    <p *ngIf="hasError(errorKey)">
-      {{ errorMessages[errorKey] }}
-    </p>
-  </ng-container>
-</ion-note>
+<div class="input-wrapper" [class.has-error]="ngControl?.control?.invalid && ngControl?.control?.touched" [class.is-disabled]="isDisabled">
+  <ion-item lines="none" class="custom-item">
+    <ion-label position="floating">{{ label }}</ion-label>
+    <ion-input 
+      [type]="showPasswordToggle && !passwordVisible ? 'password' : type" 
+      [placeholder]="placeholder"
+      [value]="value" 
+      [disabled]="isDisabled" 
+      (ionInput)="onInputChange($event)" 
+      (ionBlur)="onTouched()">
+    </ion-input>
+    <ion-button *ngIf="showPasswordToggle" slot="end" fill="clear" (click)="togglePasswordVisibility()" class="eye-button">
+      <ion-icon [name]="passwordVisible ? 'eye-off' : 'eye'"></ion-icon>
+    </ion-button>
+  </ion-item>
+
+  <div class="error-container" *ngIf="ngControl?.control?.touched">
+    <ng-container *ngFor="let errorKey of getErrorKeys()">
+      <p class="error-text" *ngIf="hasError(errorKey)">
+        <ion-icon name="alert-circle-outline"></ion-icon>
+        {{ errorMessages[errorKey] }}
+      </p>
+    </ng-container>
+  </div>
+</div>

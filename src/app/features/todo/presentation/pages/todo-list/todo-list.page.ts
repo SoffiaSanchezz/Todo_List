@@ -5,7 +5,6 @@ import {
   IonicModule,
   ModalController,
   PopoverController,
-  LoadingController,
   AlertController,
   ToastController,
   MenuController // Add MenuController
@@ -21,6 +20,7 @@ import { CategoryService } from '@shared/services/category/category.service';
 import { Task, TaskStatus } from '../../../domain/entities/task.entity';
 import { Category } from '../../../domain/entities/category.entity'; // This line should be already correct
 import { CommonModule } from '@angular/common';
+import { LoaderService } from '@shared/services/loader/loader.service';
 
 // Definir los TaskStatus si no están en tu interfaz de Task
 interface KanbanColumn {
@@ -58,8 +58,8 @@ export class TodoListPage implements OnInit, OnDestroy {
   private authService = inject(SessionProviderservice);
   private taskService = inject(TaskService);
   private categoryService = inject(CategoryService);
+  private loaderService = inject(LoaderService);
   private router = inject(Router);
-  private loadingCtrl = inject(LoadingController);
   private alertCtrl = inject(AlertController);
   private toastCtrl = inject(ToastController);
   private menuCtrl = inject(MenuController); // Inject MenuController
@@ -435,12 +435,10 @@ export class TodoListPage implements OnInit, OnDestroy {
 
   // --- Helpers ---
   private async presentLoading(message: string) {
-    const loading = await this.loadingCtrl.create({
-      message: message,
-      spinner: 'crescent'
-    });
-    await loading.present();
-    return loading;
+    this.loaderService.show(message);
+    return {
+      dismiss: () => this.loaderService.hide()
+    };
   }
 
   private async presentToast(message: string, color: string = 'primary') {
