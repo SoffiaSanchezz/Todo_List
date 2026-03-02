@@ -35,8 +35,7 @@
       </div>
 
       <button class="sign" type="submit" [disabled]="loginForm.invalid || isLoading">
-        <span *ngIf="!isLoading">Iniciar Sesión</span>
-        <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
+        <span>Iniciar Sesión</span>
       </button>
 
       <div class="error-message" *ngIf="errorMessage">
