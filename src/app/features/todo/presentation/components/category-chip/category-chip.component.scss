@@ -1,31 +1,62 @@
+:host {
+  display: inline-block;
+  --chip-height: 30px;
+}
+
 ion-chip {
-  height: 28px;
-  font-size: 0.85em;
-  font-weight: 700;
-  padding: 0 12px;
-  border-radius: 14px;
+  height: var(--chip-height);
+  margin: 4px 0;
+  padding: 0 14px;
+  border-radius: 10px;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  gap: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+
+  // Efecto de brillo sutil en el chip
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(rgba(255,255,255,0.1), transparent);
+    pointer-events: none;
+  }
 
   ion-label {
-    margin-inline-end: 6px;
+    font-size: 0.85rem;
     font-weight: 700;
-    letter-spacing: 0.3px;
-    // El color se establecerá dinámicamente desde el componente
+    letter-spacing: 0.4px;
+    margin: 0;
+    transition: transform 0.2s ease;
   }
 
   ion-icon {
-    font-size: 1em;
+    font-size: 0.95rem;
     cursor: pointer;
-    margin-inline-start: 6px;
-    opacity: 0.9;
-    transition: opacity 0.2s ease;
-    // El color se establecerá dinámicamente desde el componente
+    margin: 0;
+    opacity: 0.7;
+    transition: all 0.2s ease;
+    padding: 4px;
+    border-radius: 6px;
 
     &:hover {
       opacity: 1;
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.1);
     }
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    filter: brightness(1.1);
+  }
+
+  &:active {
+    transform: translateY(0);
   }
 }

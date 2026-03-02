@@ -1,0 +1,124 @@
+:host {
+  --bg-modal: #f8fafc;
+}
+
+ion-header {
+  ion-toolbar {
+    --background: #ffffff;
+    --color: #1e293b;
+    padding: 8px 16px;
+    
+    ion-title {
+      font-weight: 800;
+      font-size: 1.25rem;
+      letter-spacing: -0.5px;
+    }
+    
+    ion-button {
+      --color: #64748b;
+      font-size: 1.2rem;
+    }
+  }
+}
+
+ion-content {
+  --background: var(--bg-modal);
+}
+
+.modal-container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  color: #94a3b8;
+
+  ion-icon {
+    font-size: 4rem;
+    margin-bottom: 16px;
+    opacity: 0.5;
+  }
+
+  p {
+    font-size: 1.1rem;
+    font-weight: 500;
+  }
+}
+
+ion-list {
+  background: transparent;
+  padding: 0;
+}
+
+.category-item-container {
+  margin-bottom: 12px;
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: translateX(4px);
+  }
+}
+
+.category-item {
+  --background: #ffffff;
+  --border-radius: 16px;
+  --padding-start: 16px;
+  --inner-padding-end: 16px;
+  --min-height: 80px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border: 1px solid #f1f5f9;
+
+  .color-indicator {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    margin-right: 16px;
+    box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.03);
+  }
+
+  ion-label {
+    h2 {
+      font-weight: 700;
+      color: #1e293b;
+      font-size: 1.1rem;
+      margin-bottom: 4px;
+    }
+    p {
+      color: #94a3b8;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+  }
+
+  .actions {
+    display: flex;
+    gap: 8px;
+
+    ion-button {
+      --padding-start: 8px;
+      --padding-end: 8px;
+      margin: 0;
+      height: 44px;
+      width: 44px;
+      
+      ion-icon {
+        font-size: 1.4rem;
+      }
+    }
+
+    .btn-edit {
+      --color: var(--ion-color-primary);
+      &:hover { --background: rgba(var(--ion-color-primary-rgb), 0.1); }
+    }
+
+    .btn-delete {
+      &:hover { --background: rgba(var(--ion-color-danger-rgb), 0.1); }
+    }
+  }
+}
