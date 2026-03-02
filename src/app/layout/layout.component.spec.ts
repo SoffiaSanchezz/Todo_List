@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
-
 import { LayoutComponent } from './layout.component';
+import { IonicModule } from '@ionic/angular';
+import { RouterModule } from '@angular/router';
 
 describe('LayoutComponent', () => {
   let component: LayoutComponent;
@@ -9,8 +9,11 @@ describe('LayoutComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ LayoutComponent ],
-      imports: [IonicModule.forRoot()]
+      imports: [
+        IonicModule.forRoot(), 
+        RouterModule.forRoot([]),
+        LayoutComponent
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(LayoutComponent);
