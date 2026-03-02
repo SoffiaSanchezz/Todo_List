@@ -5,7 +5,6 @@ import {
   IonicModule,
   ModalController,
   PopoverController,
-  LoadingController,
   AlertController,
   ToastController,
   MenuController // Add MenuController
@@ -14,6 +13,7 @@ import { Router } from '@angular/router';
 import { TaskCardComponent } from '../../components/task-card/task-card.component';
 import { TaskModalComponent } from '../../components/task-modal/task-modal.component';
 import { CategoryModalComponent } from '../../components/category-modal/category-modal.component';
+import { CategoryListModalComponent } from '../../components/category-list-modal/category-list-modal.component';
 import { Subject, Subscription, takeUntil } from 'rxjs';
 import { SessionProviderservice } from '@shared/services/auth/session-provider.service';
 import { TaskService } from '@shared/services/task/task.service';
@@ -21,6 +21,7 @@ import { CategoryService } from '@shared/services/category/category.service';
 import { Task, TaskStatus } from '../../../domain/entities/task.entity';
 import { Category } from '../../../domain/entities/category.entity'; // This line should be already correct
 import { CommonModule } from '@angular/common';
+import { LoaderService } from '@shared/services/loader/loader.service';
 
 // Definir los TaskStatus si no están en tu interfaz de Task
 interface KanbanColumn {
@@ -58,8 +59,8 @@ export class TodoListPage implements OnInit, OnDestroy {
   private authService = inject(SessionProviderservice);
   private taskService = inject(TaskService);
   private categoryService = inject(CategoryService);
+  private loaderService = inject(LoaderService);
   private router = inject(Router);
-  private loadingCtrl = inject(LoadingController);
   private alertCtrl = inject(AlertController);
   private toastCtrl = inject(ToastController);
   private menuCtrl = inject(MenuController); // Inject MenuController
@@ -232,7 +233,17 @@ export class TodoListPage implements OnInit, OnDestroy {
   }
 
   async openCategoryMenu() {
-    await this.menuCtrl.open('categoryMenu');
+    const modal = await this.modalController.create({
+      component: CategoryListModalComponent,
+    });
+    
+    await modal.present();
+    
+    const { data } = await modal.onDidDismiss();
+    if (data) {
+      this.loadCategories();
+      this.loadTasks(); // Por si se eliminó una categoría vinculada a tareas
+    }
   }
 
   async presentDeleteConfirm(categoryId: string) {
@@ -435,12 +446,10 @@ export class TodoListPage implements OnInit, OnDestroy {
 
   // --- Helpers ---
   private async presentLoading(message: string) {
-    const loading = await this.loadingCtrl.create({
-      message: message,
-      spinner: 'crescent'
-    });
-    await loading.present();
-    return loading;
+    this.loaderService.show(message);
+    return {
+      dismiss: () => this.loaderService.hide()
+    };
   }
 
   private async presentToast(message: string, color: string = 'primary') {

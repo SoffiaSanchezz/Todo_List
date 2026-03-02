@@ -1,4 +1,8 @@
 <ion-app>
-  <ion-router-outlet id="main-content">
-  </ion-router-outlet>
+  <ion-router-outlet id="main-content"></ion-router-outlet>
+  
+  <app-loader 
+    [visible]="(loaderService.loading$ | async)!" 
+    [message]="(loaderService.message$ | async)!">
+  </app-loader>
 </ion-app>

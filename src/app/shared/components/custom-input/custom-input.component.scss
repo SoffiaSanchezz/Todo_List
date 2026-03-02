@@ -1,34 +1,143 @@
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
 
-ion-item {
-  --padding-start: 0;
-  --inner-padding-end: 0;
-  --inner-border-width: 0;
-  --highlight-background: transparent;
-  font-family: 'Quicksand', sans-serif; // Aplicar fuente Quicksand
-}
-
-ion-input {
-  --padding-start: 0;
-  --padding-end: 0;
-  font-family: 'Quicksand', sans-serif; // Aplicar fuente Quicksand
-}
-
-ion-label {
-  font-family: 'Quicksand', sans-serif; // Aplicar fuente Quicksand
-}
-
-ion-note {
+:host {
+  --primary-color: var(--ion-color-primary, #3880ff);
+  --error-color: var(--ion-color-danger, #eb445a);
+  --bg-color: #f9fafb;
+  --border-color: #e5e7eb;
+  --text-color: #1f2937;
+  --label-color: #6b7280;
+  
   display: block;
-  padding-left: 16px;
-  margin-top: 2px;
-  font-family: 'Quicksand', sans-serif; // Aplicar fuente Quicksand
+  margin-bottom: 16px;
+  font-family: 'Quicksand', sans-serif;
+}
 
-  p {
-    margin-top: 2px;
-    margin-bottom: 2px;
-    font-size: 0.75em;
-    color: var(--ion-color-danger, #eb445a);
-    font-family: 'Quicksand', sans-serif; // Aplicar fuente Quicksand
+.input-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  // Contenedor principal del Input (Estilo Card/Outlined)
+  .custom-item {
+    --background: var(--bg-color);
+    --border-radius: 12px;
+    --padding-start: 16px;
+    --padding-end: 8px;
+    --inner-padding-end: 0;
+    --highlight-height: 0; // Eliminamos la línea por defecto de Ionic
+    
+    border: 2px solid var(--border-color);
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+    margin-bottom: 4px;
+
+    // Estado Focus (al hacer clic)
+    &.item-has-focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 4px rgba(56, 128, 255, 0.1);
+      --background: #ffffff;
+    }
+  }
+
+  // Estilo de la Etiqueta (Label)
+  ion-label {
+    font-weight: 600;
+    color: var(--label-color) !important;
+    transform: translateY(10px) scale(1) !important; // Mejor posición inicial
+    transition: all 0.2s ease;
+
+    &.label-floating {
+      transform: translateY(-8px) scale(0.85) !important;
+      color: var(--primary-color) !important;
+    }
+  }
+
+  // Estilo del Input
+  ion-input {
+    --padding-top: 12px;
+    --padding-bottom: 12px;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text-color);
+    
+    &::placeholder {
+      color: #9ca3af;
+      font-weight: 400;
+    }
+  }
+
+  // Botón del Ojo (Password Toggle)
+  .eye-button {
+    --padding-start: 8px;
+    --padding-end: 8px;
+    margin: 0;
+    height: 40px;
+    --color: var(--label-color);
+    
+    ion-icon {
+      font-size: 22px;
+    }
+
+    &:hover {
+      --color: var(--primary-color);
+    }
+  }
+
+  // ESTADO DE ERROR
+  &.has-error {
+    .custom-item {
+      border-color: var(--error-color);
+      
+      &.item-has-focus {
+        box-shadow: 0 0 0 4px rgba(235, 68, 90, 0.1);
+      }
+    }
+
+    ion-label {
+      color: var(--error-color) !important;
+    }
+  }
+
+  // ESTADO DESHABILITADO
+  &.is-disabled {
+    opacity: 0.6;
+    pointer-events: none;
+    .custom-item {
+      --background: #f3f4f6;
+      border-color: #d1d5db;
+    }
+  }
+}
+
+// Mensajes de Error
+.error-container {
+  padding-left: 4px;
+  animation: slideIn 0.3s ease-out;
+
+  .error-text {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin: 4px 0;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--error-color);
+    
+    ion-icon {
+      font-size: 14px;
+    }
+  }
+}
+
+// Animación para el mensaje de error
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

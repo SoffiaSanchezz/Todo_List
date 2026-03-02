@@ -1,11 +1,26 @@
-<ion-header class="ion-no-border dark-header">
-  <ion-toolbar color="dark">
-    <!-- encabezado de el login -->
-    <ion-title class="ion-text-start">
-      <div class="header-content">
-        <img src="assets/icon/Logo-Todo.png" alt="Logo" class="header-logo">
-        <span class="header-text">My ToDo-List</span>
-      </div>
-    </ion-title>
+<ion-header class="ion-no-border modern-header">
+  <ion-toolbar>
+    <div class="header-inner">
+      <ion-title class="ion-no-padding">
+        <div class="header-content" (click)="onHeaderClick()">
+          <div class="logo-container">
+            <img src="assets/icon/Logo-Todo.png" alt="Logo" class="header-logo">
+            <div class="logo-glow"></div>
+          </div>
+          <div class="text-container">
+            <span class="header-text">My ToDo-List</span>
+            <span class="header-subtitle">Control your tasks</span>
+          </div>
+        </div>
+      </ion-title>
+
+      <!-- Espacio para botones futuros si es necesario -->
+      <ion-buttons slot="end">
+        <div class="status-dot"></div>
+      </ion-buttons>
+    </div>
   </ion-toolbar>
+  
+  <!-- Línea de gradiente decorativa -->
+  <div class="header-bottom-glow"></div>
 </ion-header>

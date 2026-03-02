@@ -1,86 +1,67 @@
-<ion-menu contentId="main-content" side="end" id="categoryMenu">
-  <ion-header>
-    <ion-toolbar>
-      <ion-title>Gestionar Categorías</ion-title>
-    </ion-toolbar>
-  </ion-header>
-  <ion-content>
-    <ion-list *ngIf="categories.length > 0; else noCategoriesMessage">
-      <ion-item *ngFor="let category of categories">
-        <div class="category-color-dot" [style.backgroundColor]="category.color"></div>
-        <ion-label>{{ category.name }}</ion-label>
-        <ion-buttons slot="end">
-          <ion-button fill="clear" (click)="openEditCategoryModal(category)">
-            <ion-icon slot="icon-only" name="pencil-outline"></ion-icon>
-          </ion-button>
-          <ion-button fill="clear" (click)="presentDeleteConfirm(category.id)" color="danger">
-            <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
-          </ion-button>
-        </ion-buttons>
-      </ion-item>
-    </ion-list>
-    <ng-template #noCategoriesMessage>
-      <ion-item>
-        <ion-label class="ion-text-center">No hay categorías disponibles</ion-label>
-      </ion-item>
-    </ng-template>
-  </ion-content>
-</ion-menu>
+<ion-header class="ion-no-border kanban-header">
+  <ion-toolbar>
+    <ion-title>
+      <div class="logo-area">
+        <ion-icon name="grid-outline" class="title-icon"></ion-icon>
+        <span>Board</span>
+      </div>
+    </ion-title>
+    
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="openCreateCategoryModal()" class="header-btn">
+        <ion-icon name="folder-outline"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" (click)="openCategoryMenu()" class="header-btn">
+        <ion-icon name="options-outline"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" (click)="logout()" class="logout-btn">
+        <ion-icon name="log-out-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
 
-<div class="ion-page" id="main-content">
-  <ion-header [translucent]="true">
-    <ion-toolbar color="primary">
-      <ion-title>
-        <img src="src/assets/icon/favicon.png" alt="Logo" style="height: 24px; vertical-align: middle; margin-right: 8px;">
-        Kanban de Tareas
-      </ion-title>
-      <ion-buttons slot="end">
-        <ion-button (click)="openCreateCategoryModal()">
-          <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
-        </ion-button>
-        <!-- New button to open category menu -->
-        <ion-button (click)="openCategoryMenu()">
-          <ion-icon slot="icon-only" name="list-outline"></ion-icon>
-        </ion-button>
-        <ion-button (click)="logout()">
-          <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
-        </ion-button>
-      </ion-buttons>
-    </ion-toolbar>
-    <ion-toolbar>
-      <ion-segment [(ngModel)]="filteredCategoryId" (ionChange)="filterTasks($event)">
+  <!-- Filtro de Categorías Estilizado -->
+  <ion-toolbar class="filter-toolbar">
+    <div class="filter-wrapper">
+      <ion-segment [(ngModel)]="filteredCategoryId" (ionChange)="filterTasks($event)" mode="md">
         <ion-segment-button value="all">
-          <ion-label>Todas las Tareas</ion-label>
+          <ion-label>All Tasks</ion-label>
         </ion-segment-button>
         <ion-segment-button *ngFor="let category of categories" [value]="category.id">
           <ion-label>{{ category.name }}</ion-label>
         </ion-segment-button>
       </ion-segment>
-    </ion-toolbar>
-  </ion-header>
+    </div>
+  </ion-toolbar>
+</ion-header>
 
-  <ion-content [fullscreen]="true">
-    <div class="kanban-board">
-      <div class="kanban-column" *ngFor="let column of columns">
-        <ion-card class="column-header">
-          <ion-card-header>
-            <ion-card-title>{{ column.title }}</ion-card-title>
-            <ion-card-subtitle>({{ column.tasks.length }})</ion-card-subtitle>
-          </ion-card-header>
-          <!-- Made Add Task button more discrete with smaller icon -->
-          <ion-button expand="block" fill="clear" (click)="openCreateTaskModal(column.status)" class="add-task-btn">
-            <ion-icon name="add-circle-outline" class="small-icon"></ion-icon> Añadir Tarea
-          </ion-button>
-        </ion-card>
+<ion-content [fullscreen]="true" class="kanban-content">
+  <!-- Fondo decorativo suave -->
+  <div class="kanban-background"></div>
 
-        <!-- Added wrapper for centered task content -->
-        <div class="task-list">
-          <app-task-card *ngFor="let task of column.tasks" [task]="task" [categories]="categories"
-            (editTask)="openEditTaskModal($event)" (deleteTask)="onTaskDeleted($event)"
-            (changeStatus)="onTaskStatusChanged($event)" (markCompleted)="onTaskMarkedCompleted($event)"
-            (editCategory)="openEditCategoryModal($event)"></app-task-card>
+  <div class="kanban-board">
+    <div class="kanban-column" *ngFor="let column of columns">
+      <div class="column-header">
+        <div class="header-main">
+          <h2 class="column-title">{{ column.title }}</h2>
+          <span class="count-badge">{{ column.tasks.length }}</span>
         </div>
+        <ion-button fill="clear" (click)="openCreateTaskModal(column.status)" class="btn-add">
+          <ion-icon name="add-outline"></ion-icon>
+        </ion-button>
+      </div>
+
+      <div class="task-list">
+        <div *ngIf="column.tasks.length === 0" class="empty-column">
+          <ion-icon name="calendar-clear-outline"></ion-icon>
+          <p>No tasks yet</p>
+        </div>
+        
+        <app-task-card *ngFor="let task of column.tasks" [task]="task" [categories]="categories"
+          (editTask)="openEditTaskModal($event)" (deleteTask)="onTaskDeleted($event)"
+          (changeStatus)="onTaskStatusChanged($event)" (markCompleted)="onTaskMarkedCompleted($event)"
+          (editCategory)="openEditCategoryModal($event)"></app-task-card>
       </div>
     </div>
-  </ion-content>
-</div>
+  </div>
+</ion-content>
