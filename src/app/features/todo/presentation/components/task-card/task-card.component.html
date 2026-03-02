@@ -1,31 +1,37 @@
-<div class="card" [class.task-completed]="task.completed">
-  <div class="img">
-    <ion-checkbox [checked]="task.completed" (ionChange)="onToggleCompleted()" (click)="stopEventPropagation($event)"
-      [color]="task.completed ? 'success' : 'medium'"></ion-checkbox>
-  </div>
-  <div class="textBox">
-    <div class="textContent">
-      <p class="h1">{{ task.title }}</p>
-      <span class="span">{{ task.updatedAt | date:'shortTime' }}</span>
+<div class="task-card-container" [class.is-completed]="task.completed" [class.status-new]="task.status === 'NEW'" [class.status-progress]="task.status === 'IN_PROGRESS'" [class.status-scheduled]="task.status === 'SCHEDULED'">
+  
+  <div class="card-glow"></div>
+  
+  <div class="card-main">
+    <!-- Checkbox Lateral Estilizado -->
+    <div class="check-area">
+      <ion-checkbox [checked]="task.completed" (ionChange)="onToggleCompleted()" (click)="stopEventPropagation($event)"></ion-checkbox>
     </div>
-    <p class="p">{{ task.description }}</p>
-    <!-- AQUÍ SE AGREGA EL MANEJADOR DEL EVENTO editCategory -->
-    <app-category-chip [category]="getCategoryForTask()" (editCategory)="onEditCategoryClick()">
-    </app-category-chip>
-  </div>
-  <ion-buttons slot="end" (click)="stopEventPropagation($event)">
-    <ion-button (click)="onEditClick()">
-      <ion-icon name="create-outline"></ion-icon>
-    </ion-button>
-    <ion-button (click)="onDeleteClick()" color="danger">
-      <ion-icon name="trash-outline"></ion-icon>
-    </ion-button>
-  </ion-buttons>
-</div>
 
-<ion-item class="status-selector" (click)="stopEventPropagation($event)">
-  <ion-label>Estado:</ion-label>
-  <ion-select interface="popover" [value]="currentTaskStatus" (ionChange)="onStatusChange($event)">
-    <ion-select-option *ngFor="let status of taskStatuses" [value]="status">{{ status | titlecase }}</ion-select-option>
-  </ion-select>
-</ion-item>
+    <!-- Contenido de la Tarea -->
+    <div class="content-area" (click)="onEditClick()">
+      <div class="header-row">
+        <span class="status-badge">{{ task.status | titlecase }}</span>
+        <span class="time-stamp">{{ task.updatedAt | date:'shortTime' }}</span>
+      </div>
+      
+      <h3 class="task-title">{{ task.title }}</h3>
+      <p class="task-desc" *ngIf="task.description">{{ task.description }}</p>
+      
+      <div class="footer-row">
+        <app-category-chip [category]="getCategoryForTask()" (editCategory)="onEditCategoryClick()">
+        </app-category-chip>
+      </div>
+    </div>
+
+    <!-- Acciones Rápidas -->
+    <div class="actions-area" (click)="stopEventPropagation($event)">
+      <ion-button fill="clear" (click)="onEditClick()" class="btn-edit">
+        <ion-icon name="create-outline"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" (click)="onDeleteClick()" color="danger" class="btn-delete">
+        <ion-icon name="trash-outline"></ion-icon>
+      </ion-button>
+    </div>
+  </div>
+</div>
